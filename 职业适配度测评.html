@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>职业适配度测评 | 发现你的理想职业</title>
+    
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Font Awesome图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 引入Chart.js图表库 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #165DFF;
+            --secondary-color: #36D399;
+            --accent-color: #FF9F43;
+            --neutral-color: #F3F4F6;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f9fafb;
+            color: #1f2937;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            max-width: 90%;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 24px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #165DFF 0%, #3B82F6 100%);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 60px 0 40px;
+            text-align: center;
+        }
+        
+        .cta-button {
+            background: linear-gradient(135deg, #FF5733 0%, #C70039 100%);
+            padding: 14px 28px;
+            font-weight: 600;
+            border-radius: 8px;
+            box-shadow: 0 10px 20px rgba(255, 87, 33, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-size: 1.1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto;
+            width: 220px;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .cta-button:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .cta-button:hover:before {
+            left: 100%;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(255, 87, 33, 0.4);
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background-color: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 16px 0;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .question {
+            margin-bottom: 24px;
+        }
+        
+        .option {
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .option:hover {
+            background-color: #f3f4f6;
+            border-color: #d1d5db;
+        }
+        
+        .option.selected {
+            background-color: #ebf5ff;
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .result-chart {
+            height: 300px;
+            margin: 20px 0;
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 12px 0;
+            padding: 12px;
+            background-color: #f9fafb;
+            border-radius: 8px;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 24px;
+        }
+        
+        .nav-button {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .prev-button {
+            background-color: #f3f4f6;
+            color: #6b7280;
+        }
+        
+        .prev-button:hover {
+            background-color: #e5e7eb;
+        }
+        
+        .next-button {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .next-button:hover {
+            background-color: #134eed;
+        }
+        
+        .next-button:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+        }
+        
+        .tag {
+            display: inline-block;
+            padding: 4px 8px;
+            background-color: #f3f4f6;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-right: 6px;
+            margin-bottom: 6px;
+        }
+        
+        .tag.analytical {
+            background-color: #e0f2fe;
+            color: #0369a1;
+        }
+        
+        .tag.practical {
+            background-color: #ecfdf5;
+            color: #16a34a;
+        }
+        
+        .tag.social {
+            background-color: #fef3c7;
+            color: #b97616;
+        }
+        
+        .tag.creative {
+            background-color: #fdf2f8;
+            color: #b91c1c;
+        }
+        
+        .question-number {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        footer {
+            background-color: #1f2937;
+            color: #9ca3af;
+            padding: 30px 0;
+            margin-top: 80px;
+        }
+        
+        footer p {
+            margin-bottom: 0;
+            text-align: center;
+        }
+        
+        .password-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .password-container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .password-input {
+            width: 100%;
+            padding: 12px;
+            margin: 16px 0;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        
+        .form-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            margin: 16px 0;
+            width: 100%;
+        }
+        
+        .form-button:hover {
+            background-color: #134eed;
+        }
+        
+        .form-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 16px;
+            font-weight: 500;
+        }
+        
+        .form-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="max-w-7xl mx-auto px-6">
+            <h1 class="text-white text-4xl font-bold mb-4">职业适配度测评</h1>
+            <p class="text-white text-lg max-w-lg mx-auto mt-2">基于科学的心理学理论和数据分析，帮助你发现最适合自己的职业方向</p>
+            
+            <button id="startButton" class="cta-button mt-8 flex items-center justify-center" aria-label="开始测评">
+                <i class="fas fa-rocket mr-2"></i>
+                开始测评
+            </button>
+        </div>
+    </header>
+    
+    <div class="max-w-7xl mx-auto p-6">
+        <section id="features" class="mt-10">
+            <h2 class="text-2xl font-bold text-center">科学测评体系，精准职业定位</h2>
+            <p class="text-gray-600 text-center mt-2">基于MBTI、霍兰德职业兴趣理论和大五人格模型等心理学理论，全面分析你的职业适配度</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <div class="bg-blue-100 p-4 rounded-lg mb-4">
+                        <i class="fas fa-brain text-blue-500 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold">性格分析</h3>
+                    <p class="mt-2">分析你的性格特点和行为模式，匹配最适合你的工作环境</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <div class="bg-green-100 p-4 rounded-lg mb-4">
+                        <i class="fas fa-lightbulb text-green-500 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold">兴趣评估</h3>
+                    <p class="mt-2">识别你的职业兴趣和动机，发现能激发你热情的职业方向</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <div class="bg-yellow-100 p-4 rounded-lg mb-4">
+                        <i class="fas fa-chart-line text-yellow-500 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold">能力测评</h3>
+                    <p class="mt-2">评估你的专业技能和潜力，预测你的职业发展路径</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- 职业适配度测评模态框 -->
+    <div id="assessmentModal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold">职业适配度测评</h2>
+                <button id="closeModal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <p class="text-gray-600 mb-4">请回答以下问题，这将帮助我们分析你的职业适配度。每个问题没有对错之分，请根据实际情况作答。</p>
+            
+            <div class="progress-bar">
+                <div class="progress" id="progressBar"></div>
+            </div>
+            
+            <div class="flex justify-between text-sm text-gray-500 mb-4">
+                <span>问题进度</span>
+                <span id="currentQuestion">0/30</span>
+            </div>
+            
+            <div class="question">
+                <h3 class="text-lg font-semibold mb-4" id="questionTextContainer">
+                    <span class="question-number" id="questionNumber">1.</span>
+                    <span id="questionText"></span>
+                </h3>
+                
+                <div id="optionsContainer">
+                    <!-- 选项将通过JavaScript动态生成 -->
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button id="prevButton" class="nav-button prev-button">
+                    ← 上一题
+                </button>
+                <button id="nextButton" class="nav-button next-button" disabled>
+                    下一题 →
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 结果模态框 -->
+    <div id="resultModal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold">测评结果分析</h2>
+                <button id="closeResult" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <p class="text-gray-600 mb-4">根据你的回答，我们为你生成了以下职业适配度分析：</p>
+            
+            <canvas id="resultChart" class="result-chart"></canvas>
+            
+            <div class="flex flex-wrap gap-4 mb-6">
+                <span class="tag analytical">分析型</span>
+                <span class="tag practical">实践型</span>
+                <span class="tag social">社交型</span>
+                <span class="tag creative">创造型</span>
+            </div>
+            
+            <div id="resultAnalysis" class="mt-6">
+                <!-- 结果分析将通过JavaScript动态生成 -->
+            </div>
+            
+            <div class="mt-6">
+                <h3 class="text-lg font-semibold">推荐职业方向</h3>
+                <div id="careerRecommendations" class="mt-4">
+                    <!-- 职业推荐将通过JavaScript动态生成 -->
+                </div>
+            </div>
+            
+            <div class="mt-8 text-center">
+                <button id="restartButton" class="cta-button">
+                    <i class="fas fa-redo mr-2"></i> 重新测评
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 密码验证模态框 -->
+    <div id="passwordModal" class="password-modal">
+        <div class="password-container">
+            <h3 class="text-xl font-semibold mb-4">请输入密码</h3>
+            <p class="text-gray-600 mb-4">通过填写下方免费测评信息登记表即可获取密码。</p>
+            
+            <input type="password" id="passwordInput" class="password-input" placeholder="请输入密码">
+            
+            <button id="submitPassword" class="form-button">提交</button>
+            
+            <a href="https://doc.weixin.qq.com/forms/ANgASAfkAEwASsATgbSAMcCNiQYbJI1Tf?page=1" id="freeFormLink" style="color: blue;">
+                免费测评信息登记表
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p>© 2025 富贵人生俱乐部 保留所有权利.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 职业适配度测评题目
+        const assessmentQuestions = [
+            {
+                id: 1,
+                question: "当面对一个复杂问题时，你通常会：",
+                options: [
+                    { id: 1, text: "仔细分析，制定详细的解决方案", type: "analytical" },
+                    { id: 2, text: "尝试不同的方法，直到找到可行的解决方案", type: "practical" },
+                    { id: 3, text: "寻求他人的建议和帮助", type: "social" },
+                    { id: 4, text: "先放下问题，过段时间再思考", type: "creative" }
+                ]
+            },
+            {
+                id: 2,
+                question: "在团队合作中，你更倾向于：",
+                options: [
+                    { id: 1, text: "领导团队，分配任务并确保目标实现", type: "leadership" },
+                    { id: 2, text: "作为团队成员，执行分配的任务并提供支持", type: "cooperation" },
+                    { id: 3, text: "提出创意和新想法，推动团队创新", type: "creative" },
+                    { id: 4, text: "确保团队成员之间的良好沟通和协作", type: "social" }
+                ]
+            },
+            {
+                id: 3,
+                question: "在工作中，你更看重：",
+                options: [
+                    { id: 1, text: "稳定的工作环境和明确的职业发展路径", type: "stability" },
+                    { id: 2, text: "挑战性的任务和不断学习的机会", type: "growth" },
+                    { id: 3, text: "良好的人际关系和和谐的工作氛围", type: "social" },
+                    { id: 4, text: "能够发挥自己的创造力和独立思考的空间", type: "creative" }
+                ]
+            },
+            {
+                id: 4,
+                question: "当需要学习一项新技能时，你通常会：",
+                options: [
+                    { id: 1, text: "阅读相关书籍和资料，系统学习", type: "analytical" },
+                    { id: 2, text: "通过在线教程和视频学习", type: "practical" },
+                    { id: 3, text: "参加培训课程，与讲师和同学互动", type: "social" },
+                    { id: 4, text: "尝试在实践中应用，通过试错学习", type: "creative" }
+                ]
+            },
+            {
+                id: 5,
+                question: "在休闲时间，你更喜欢：",
+                options: [
+                    { id: 1, text: "阅读书籍或研究感兴趣的主题", type: "analytical" },
+                    { id: 2, text: "参加体育活动或户外活动", type: "practical" },
+                    { id: 3, text: "与朋友和家人聚会", type: "social" },
+                    { id: 4, text: "从事创造性的活动，如绘画、写作或音乐", type: "creative" }
+                ]
+            },
+            {
+                id: 6,
+                question: "当需要做决策时，你更倾向于：",
+                options: [
+                    { id: 1, text: "基于数据和事实进行逻辑分析", type: "analytical" },
+                    { id: 2, text: "考虑实际经验和可行性", type: "practical" },
+                    { id: 3, text: "考虑他人的感受和意见", type: "social" },
+                    { id: 4, text: "凭直觉和灵感做出决定", type: "creative" }
+                ]
+            },
+            {
+                id: 7,
+                question: "你更希望自己的工作：",
+                options: [
+                    { id: 1, text: "能够解决复杂的问题和挑战", type: "analytical" },
+                    { id: 2, text: "能够直接看到实际的成果和影响", type: "practical" },
+                    { id: 3, text: "能够帮助他人和社会", type: "social" },
+                    { id: 4, text: "能够创造新的产品、服务或理念", type: "creative" }
+                ]
+            },
+            {
+                id: 8,
+                question: "在面对压力时，你通常会：",
+                options: [
+                    { id: 1, text: "保持冷静，有条不紊地处理问题", type: "analytical" },
+                    { id: 2, text: "采取行动，尝试快速解决问题", type: "practical" },
+                    { id: 3, text: "与他人交流，寻求支持和理解", type: "social" },
+                    { id: 4, text: "寻找创造性的解决方案", type: "creative" }
+                ]
+            },
+            {
+                id: 9,
+                question: "你更喜欢哪种类型的工作环境：",
+                options: [
+                    { id: 1, text: "结构化、有明确规则和流程的环境", type: "stability" },
+                    { id: 2, text: "动态、充满挑战和变化的环境", type: "growth" },
+                    { id: 3, text: "友好、合作的团队环境", type: "social" },
+                    { id: 4, text: "自由、开放、鼓励创新的环境", type: "creative" }
+                ]
+            },
+            {
+                id: 10,
+                question: "在学习或工作中，你更倾向于：",
+                options: [
+                    { id: 1, text: "专注于一个领域，深入钻研", type: "analytical" },
+                    { id: 2, text: "掌握多种技能，灵活应对不同任务", type: "practical" },
+                    { id: 3, text: "与他人合作，共同完成项目", type: "social" },
+                    { id: 4, text: "探索新领域，尝试新方法", type: "creative" }
+                ]
+            },
+            {
+                id: 11,
+                question: "当你负责一个项目时，你更关注：",
+                options: [
+                    { id: 1, text: "细节和准确性", type: "analytical" },
+                    { id: 2, text: "效率和结果", type: "practical" },
+                    { id: 3, text: "团队成员的满意度和发展", type: "social" },
+                    { id: 4, text: "创新性和突破性", type: "creative" }
+                ]
+            },
+            {
+                id: 12,
+                question: "在社交场合中，你通常是：",
+                options: [
+                    { id: 1, text: "安静的观察者，喜欢深入思考", type: "analytical" },
+                    { id: 2, text: "积极参与活动，喜欢动手实践", type: "practical" },
+                    { id: 3, text: "社交活跃，喜欢与人交流", type: "social" },
+                    { id: 4, text: "富有创意，喜欢分享独特观点", type: "creative" }
+                ]
+            },
+            {
+                id: 13,
+                question: "你更看重工作中的：",
+                options: [
+                    { id: 1, text: "专业性和权威性", type: "analytical" },
+                    { id: 2, text: "实用性和效果", type: "practical" },
+                    { id: 3, text: "人际关系和团队合作", type: "social" },
+                    { id: 4, text: "自由度和自主性", type: "creative" }
+                ]
+            },
+            {
+                id: 14,
+                question: "当需要表达自己的观点时，你更倾向于：",
+                options: [
+                    { id: 1, text: "用逻辑和数据支持自己的观点", type: "analytical" },
+                    { id: 2, text: "用实际案例和经验说明问题", type: "practical" },
+                    { id: 3, text: "考虑听众的感受和需求", type: "social" },
+                    { id: 4, text: "用创新和独特的方式表达", type: "creative" }
+                ]
+            },
+            {
+                id: 15,
+                question: "你对未来的职业规划更倾向于：",
+                options: [
+                    { id: 1, text: "制定详细的计划，并按计划逐步实现", type: "analytical" },
+                    { id: 2, text: "根据实际情况灵活调整", type: "practical" },
+                    { id: 3, text: "与他人合作，共同规划未来", type: "social" },
+                    { id: 4, text: "保持开放心态，探索各种可能性", type: "creative" }
+                ]
+            },
+            {
+                id: 16,
+                question: "在处理日常任务时，你更倾向于：",
+                options: [
+                    { id: 1, text: "按照既定流程和方法完成", type: "stability" },
+                    { id: 2, text: "寻找更高效的方法来完成", type: "practical" },
+                    { id: 3, text: "与他人协作完成任务", type: "social" },
+                    { id: 4, text: "尝试新的方法和思路", type: "creative" }
+                ]
+            },
+            {
+                id: 17,
+                question: "当面对不确定性时，你通常会：",
+                options: [
+                    { id: 1, text: "收集更多信息，分析可能的结果", type: "analytical" },
+                    { id: 2, text: "迅速行动，在实践中寻找答案", type: "practical" },
+                    { id: 3, text: "寻求他人的意见和支持", type: "social" },
+                    { id: 4, text: "把不确定性看作机会，尝试新事物", type: "creative" }
+                ]
+            },
+            {
+                id: 18,
+                question: "你更欣赏哪种类型的领导：",
+                options: [
+                    { id: 1, text: "理性、有条理，能够清晰地制定目标和计划", type: "analytical" },
+                    { id: 2, text: "务实、果断，能够迅速解决问题", type: "practical" },
+                    { id: 3, text: "以人为本，关心团队成员的需求和发展", type: "social" },
+                    { id: 4, text: "富有远见，能够激励团队创新和突破", type: "creative" }
+                ]
+            },
+            {
+                id: 19,
+                question: "在解决问题时，你更擅长：",
+                options: [
+                    { id: 1, text: "分析问题的根本原因，找到系统性解决方案", type: "analytical" },
+                    { id: 2, text: "快速找到实际可行的解决方案", type: "practical" },
+                    { id: 3, text: "协调各方资源，共同解决问题", type: "social" },
+                    { id: 4, text: "提出创新的解决方案，打破常规", type: "creative" }
+                ]
+            },
+            {
+                id: 20,
+                question: "你更倾向于选择哪种类型的工作：",
+                options: [
+                    { id: 1, text: "需要深入专业知识和技术的工作", type: "analytical" },
+                    { id: 2, text: "能够直接产生实际成果的工作", type: "practical" },
+                    { id: 3, text: "需要与人打交道，提供服务或支持的工作", type: "social" },
+                    { id: 4, text: "需要创意和想象力的工作", type: "creative" }
+                ]
+            },
+            {
+                id: 21,
+                question: "在评价一个项目或方案时，你更看重：",
+                options: [
+                    { id: 1, text: "逻辑性和严谨性", type: "analytical" },
+                    { id: 2, text: "实用性和可操作性", type: "practical" },
+                    { id: 3, text: "对他人和社会的价值", type: "social" },
+                    { id: 4, text: "创新性和独特性", type: "creative" }
+                ]
+            },
+            {
+                id: 22,
+                question: "当需要学习新的知识或技能时，你更倾向于：",
+                options: [
+                    { id: 1, text: "系统地学习理论知识", type: "analytical" },
+                    { id: 2, text: "通过实践操作来学习", type: "practical" },
+                    { id: 3, text: "参加讨论和交流活动", type: "social" },
+                    { id: 4, text: "探索和尝试新的方法", type: "creative" }
+                ]
+            },
+            {
+                id: 23,
+                question: "在团队中，你更愿意承担哪种角色：",
+                options: [
+                    { id: 1, text: "专家角色，提供专业知识和技术支持", type: "analytical" },
+                    { id: 2, text: "执行者角色，确保任务按时完成", type: "practical" },
+                    { id: 3, text: "协调者角色，促进团队沟通和合作", type: "social" },
+                    { id: 4, text: "创新者角色，提出新想法和解决方案", type: "creative" }
+                ]
+            },
+            {
+                id: 24,
+                question: "你对工作与生活的平衡更倾向于：",
+                options: [
+                    { id: 1, text: "工作和生活有明确的界限，注重生活质量", type: "stability" },
+                    { id: 2, text: "愿意为了工作目标投入更多时间和精力", type: "growth" },
+                    { id: 3, text: "希望工作能够融入生活，带来意义和满足感", type: "social" },
+                    { id: 4, text: "追求工作和生活的灵活性和多样性", type: "creative" }
+                ]
+            },
+            {
+                id: 25,
+                question: "当面对批评时，你通常会：",
+                options: [
+                    { id: 1, text: "认真分析批评的内容，从中学习和改进", type: "analytical" },
+                    { id: 2, text: "接受批评并努力改正问题", type: "practical" },
+                    { id: 3, text: "关注批评者的意图和感受", type: "social" },
+                    { id: 4, text: "思考是否有其他角度或方法", type: "creative" }
+                ]
+            },
+            {
+                id: 26,
+                question: "你更倾向于哪种决策方式：",
+                options: [
+                    { id: 1, text: "谨慎思考，权衡各种可能性后再做决定", type: "analytical" },
+                    { id: 2, text: "根据经验快速做出判断", type: "practical" },
+                    { id: 3, text: "与他人商量后再做决定", type: "social" },
+                    { id: 4, text: "凭直觉做出决定", type: "creative" }
+                ]
+            },
+            {
+                id: 27,
+                question: "在工作中，你更希望获得：",
+                options: [
+                    { id: 1, text: "明确的目标和清晰的反馈", type: "analytical" },
+                    { id: 2, text: "实际的成果和成就感", type: "practical" },
+                    { id: 3, text: "良好的人际关系和团队支持", type: "social" },
+                    { id: 4, text: "自由发挥的空间和创新的机会", type: "creative" }
+                ]
+            },
+            {
+                id: 28,
+                question: "你更感兴趣的领域是：",
+                options: [
+                    { id: 1, text: "科学、技术、工程和数学", type: "analytical" },
+                    { id: 2, text: "实际操作、手工艺或体育", type: "practical" },
+                    { id: 3, text: "教育、医疗、社会服务或艺术", type: "social" },
+                    { id: 4, text: "设计、创意、媒体或创业", type: "creative" }
+                ]
+            },
+            {
+                id: 29,
+                question: "当需要完成一项重要任务时，你更倾向于：",
+                options: [
+                    { id: 1, text: "提前规划，制定详细的计划", type: "analytical" },
+                    { id: 2, text: "立即开始行动，边做边调整", type: "practical" },
+                    { id: 3, text: "与他人合作，共同完成任务", type: "social" },
+                    { id: 4, text: "寻找创新的方法来完成任务", type: "creative" }
+                ]
+            },
+            {
+                id: 30,
+                question: "你理想中的职业应该：",
+                options: [
+                    { id: 1, text: "能够让我深入专业领域，成为专家", type: "analytical" },
+                    { id: 2, text: "能够让我解决实际问题，产生实际影响", type: "practical" },
+                    { id: 3, text: "能够让我帮助他人，为社会做出贡献", type: "social" },
+                    { id: 4, text: "能够让我发挥创意，不断创新和突破", type: "creative" }
+                ]
+            }
+        ];
+
+        // 职业类型描述
+        const typeDescriptions = {
+            analytical: {
+                name: "分析型",
+                description: "你擅长逻辑推理和问题分析，喜欢深入研究复杂问题，适合从事科研、工程、数据分析等需要严谨分析的职业。"
+            },
+            practical: {
+                name: "实践型",
+                description: "你注重实际效果，擅长解决具体问题，喜欢看到自己的工作直接产生结果，适合从事技术、医疗、教育等需要实际操作的职业。"
+            },
+            social: {
+                name: "社交型",
+                description: "你善于与人交往，有良好的沟通能力和团队协作精神，喜欢帮助他人，适合从事心理咨询、教育、销售等需要人际互动的职业。"
+            },
+            creative: {
+                name: "创造型",
+                description: "你富有想象力和创造力，喜欢尝试新事物，不拘泥于传统方法，适合从事设计、艺术、创业等需要创新思维的职业。"
+            }
+        };
+
+        // 职业推荐
+        const careerRecommendations = {
+            analytical: ["数据分析师", "研究员", "工程师", "系统架构师", "统计学家"],
+            practical: ["医生", "护士", "教师", "机械师", "电工"],
+            social: ["心理咨询师", "社会工作者", "人力资源专员", "销售经理", "公关专员"],
+            creative: ["设计师", "艺术家", "作家", "导演", "创业者"]
+        };
+
+        // UI元素
+        const startButton = document.getElementById('startButton');
+        const assessmentModal = document.getElementById('assessmentModal');
+        const closeModal = document.getElementById('closeModal');
+        const resultModal = document.getElementById('resultModal');
+        const closeResult = document.getElementById('closeResult');
+        const restartButton = document.getElementById('restartButton');
+        const questionNumber = document.getElementById('questionNumber');
+        const questionText = document.getElementById('questionText');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const prevButton = document.getElementById('prevButton');
+        const nextButton = document.getElementById('nextButton');
+        const progressBar = document.getElementById('progressBar');
+        const currentQuestionSpan = document.getElementById('currentQuestion');
+        const resultAnalysis = document.getElementById('resultAnalysis');
+        const careerRecommendationsContainer = document.getElementById('careerRecommendations');
+        const passwordModal = document.getElementById('passwordModal');
+        const passwordInput = document.getElementById('passwordInput');
+        const submitPassword = document.getElementById('submitPassword');
+        const freeFormLink = document.getElementById('freeFormLink');
+
+        // 测评状态
+        let currentQuestionIndex = 0;
+        let answers = {};
+        let totalQuestions = assessmentQuestions.length;
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 绑定事件
+            startButton.addEventListener('click', startAssessment);
+            closeModal.addEventListener('click', closeAssessment);
+            closeResult.addEventListener('click', closeResults);
+            restartButton.addEventListener('click', restartAssessment);
+            prevButton.addEventListener('click', goToPreviousQuestion);
+            nextButton.addEventListener('click', goToNextQuestion);
+            submitPassword.addEventListener('click', checkPassword);
+            
+            // 按回车键提交密码
+            passwordInput.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    checkPassword();
+                }
+            });
+        });
+
+        // 打开免费测评信息登记表
+        function openFreeForm() {
+            window.location.href = 'https://doc.weixin.qq.com/forms/ANgASAfkAEwASsATgbSAMcCNiQYbJI1Tf?page=1';
+        }
+
+        // 检查密码
+        function checkPassword() {
+            const password = passwordInput.value.trim();
+            if (password === 'lianheziqiang') {
+                passwordModal.style.display = 'none';
+                // 隐藏密码模态框并显示结果
+                showResults();
+            } else {
+                alert('您的密码不正确，请重新输入。');
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+        }
+
+        // 开始测评
+        function startAssessment() {
+            assessmentModal.style.display = 'flex';
+            startButton.style.display = 'none';
+            showQuestion(currentQuestionIndex);
+            updateProgress(0);
+        }
+
+        // 关闭测评
+        function closeAssessment() {
+            assessmentModal.style.display = 'none';
+            startButton.style.display = 'block';
+            resetAssessment();
+        }
+
+        // 关闭结果
+        function closeResults() {
+            resultModal.style.display = 'none';
+            startButton.style.display = 'block';
+            resetAssessment();
+        }
+
+        // 重新开始测评
+        function restartAssessment() {
+            resultModal.style.display = 'none';
+            resetAssessment();
+            startAssessment();
+        }
+
+        // 重置测评
+        function resetAssessment() {
+            currentQuestionIndex = 0;
+            answers = {};
+            updateProgress(0);
+            prevButton.disabled = true;
+            nextButton.disabled = true;
+        }
+
+        // 显示题目
+        function showQuestion(index) {
+            const question = assessmentQuestions[index];
+            questionNumber.textContent = `${index + 1}.`;
+            questionText.textContent = question.question;
+            
+            optionsContainer.innerHTML = '';
+            question.options.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.innerHTML = `
+                    <div class="flex items-center">
+                        <input type="radio" id="option${option.id}" name="question${question.id}" value="${option.type}" class="mr-2">
+                        <label for="option${option.id}">${option.text}</label>
+                    </div>
+                `;
+                
+                // 如果已有答案，则选中对应的选项
+                if (answers[question.id] === option.type) {
+                    optionElement.classList.add('selected');
+                }
+                
+                // 添加点击事件
+                optionElement.addEventListener('click', function() {
+                    selectOption(question.id, option.type, optionElement);
+                });
+                
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            currentQuestionSpan.textContent = `${index + 1}/${totalQuestions}`;
+            
+            // 启用/禁用上一题按钮
+            prevButton.disabled = index === 0;
+            
+            // 启用/禁用下一题按钮
+            nextButton.disabled = !answers[question.id];
+            
+            // 更新进度条
+            updateProgress(((index) / (totalQuestions - 1)) * 100);
+            
+            // 修改最后一题的下一个按钮文本
+            if (index === totalQuestions - 1) {
+                nextButton.textContent = '获取测评报告';
+            } else {
+                nextButton.textContent = '下一题 →';
+            }
+            
+            // 修改上一题按钮文本
+            prevButton.textContent = '← 上一题';
+        }
+
+        // 选择选项
+        function selectOption(questionId, type, optionElement) {
+            answers[questionId] = type;
+            
+            // 移除所有选项的选中状态
+            const options = optionsContainer.querySelectorAll('.option');
+            options.forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // 设置当前选项为选中状态
+            optionElement.classList.add('selected');
+            
+            // 启用下一题按钮
+            nextButton.disabled = false;
+        }
+
+        // 上一题
+        function goToPreviousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                showQuestion(currentQuestionIndex);
+            }
+        }
+
+        // 下一题
+        function goToNextQuestion() {
+            if (currentQuestionIndex < totalQuestions - 1) {
+                currentQuestionIndex++;
+                showQuestion(currentQuestionIndex);
+            } else {
+                // 最后一题，显示密码模态框
+                assessmentModal.style.display = 'none';
+                passwordModal.style.display = 'flex';
+            }
+        }
+
+        // 更新进度条
+        function updateProgress(percent) {
+            progressBar.style.width = `${percent}%`;
+        }
+
+        // 显示结果
+        function showResults() {
+            // 计算得分
+            const scores = {
+                analytical: 0,
+                practical: 0,
+                social: 0,
+                creative: 0
+            };
+            
+            // 统计每种类型的题目数量
+            let typeCounts = {
+                analytical: 0,
+                practical: 0,
+                social: 0,
+                creative: 0
+            };
+            
+            assessmentQuestions.forEach(question => {
+                question.options.forEach(option => {
+                    if (option.type === 'analytical' || option.type === 'practical' || 
+                        option.type === 'social' || option.type === 'creative') {
+                        typeCounts[option.type]++;
+                    }
+                });
+            });
+            
+            // 计算每种类型的得分
+            for (const type in typeCounts) {
+                if (typeCounts[type] > 0) {
+                    scores[type] = Object.values(answers).filter(answer => answer === type).length / typeCounts[type] * 100;
+                }
+            }
+            
+            // 找出最高得分的类型
+            let maxType = '';
+            let maxScore = 0;
+            for (const type in scores) {
+                if (scores[type] > maxScore) {
+                    maxScore = scores[type];
+                    maxType = type;
+                }
+            }
+            
+            // 创建图表
+            const ctx = document.getElementById('resultChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: Object.keys(typeDescriptions).map(type => typeDescriptions[type].name),
+                    datasets: [{
+                        label: '你的职业适配度',
+                        data: [scores.analytical || 0, scores.practical || 0, scores.social || 0, scores.creative || 0],
+                        backgroundColor: 'rgba(22, 93, 255, 0.2)',
+                        borderColor: '#165DFF',
+                        pointBackgroundColor: '#165DFF',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#165DFF'
+                    }]
+                },
+                options: {
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+            
+            // 显示结果分析
+            resultAnalysis.innerHTML = `
+                <div class="result-item">
+                    <span>主导类型: ${typeDescriptions[maxType].name}</span>
+                    <span>适配度: ${Math.round(maxScore)}%</span>
+                </div>
+                <p class="mt-2">${typeDescriptions[maxType].description}</p>
+                
+                <h4 class="text-lg font-semibold mt-6">详细分析:</h4>
+                <div class="mt-2">
+                    ${Object.keys(typeDescriptions).map(type => `
+                        <div class="result-item">
+                            <span>${typeDescriptions[type].name}: ${Math.round(scores[type])}%</span>
+                            <span>${typeDescriptions[type].description}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            // 显示职业推荐
+            careerRecommendationsContainer.innerHTML = `
+                <div class="result-item">
+                    <span>${typeDescriptions[maxType].name}职业推荐:</span>
+                    <span>${careerRecommendations[maxType].join(', ')}</span>
+                </div>
+            `;
+            
+            // 显示结果模态框
+            resultModal.style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
