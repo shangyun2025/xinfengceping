@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人生使命测评</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6', // 蓝色主色调，表示信任和探索
+                        secondary: '#10B981', // 绿色辅助色，表示成长和平衡
+                        accent: '#8B5CF6', // 紫色强调色，表示创造力和智慧
+                        neutral: '#1F2937', // 深灰色文本
+                        'neutral-light': '#F3F4F6', // 浅灰色背景
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .bg-gradient-primary {
+                background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            }
+            .progress-animation {
+                transition: width 0.5s ease-in-out;
+            }
+            .fade-in {
+                animation: fadeIn 0.5s ease-in-out;
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-gray-50 text-neutral min-h-screen flex flex-col">
+    <!-- 导航栏 -->
+    <nav class="bg-white shadow-md fixed w-full z-50 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-primary font-bold text-xl">人生使命测评</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-4">
+                    <button id="about-btn" class="text-neutral hover:text-primary transition-colors duration-200">
+                        <i class="fa fa-info-circle mr-1"></i> 关于测评
+                    </button>
+                    <button id="results-btn" class="text-neutral hover:text-primary transition-colors duration-200 hidden">
+                        <i class="fa fa-bar-chart mr-1"></i> 查看结果
+                    </button>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-neutral hover:text-primary">
+                        <i class="fa fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="hidden bg-white shadow-lg absolute w-full fade-in">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <button id="mobile-about-btn" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-neutral hover:bg-primary/10 hover:text-primary transition-colors duration-200">
+                    <i class="fa fa-info-circle mr-1"></i> 关于测评
+                </button>
+                <button id="mobile-results-btn" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-neutral hover:bg-primary/10 hover:text-primary transition-colors duration-200 hidden">
+                    <i class="fa fa-bar-chart mr-1"></i> 查看结果
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容 -->
+    <main class="flex-grow pt-20 pb-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- 欢迎页面 -->
+            <section id="welcome-section" class="py-12 fade-in">
+                <div class="bg-white rounded-2xl shadow-lg p-8 md:p-12 card-hover">
+                    <div class="text-center mb-8">
+                        <h1 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-neutral mb-4">发现你的人生使命</h1>
+                        <p class="text-gray-600 text-lg mb-6 max-w-3xl mx-auto">这个测评将帮助你探索自己的价值观、兴趣和能力，从而更清晰地了解你的人生使命。</p>
+                        <div class="flex flex-col sm:flex-row justify-center gap-4 mt-8">
+                            <button id="start-btn" class="bg-primary hover:bg-primary/90 text-white font-medium py-3 px-8 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center">
+                                <i class="fa fa-compass mr-2"></i> 开始测评
+                            </button>
+                            <button id="learn-more-btn" class="bg-white hover:bg-gray-50 text-primary border border-primary font-medium py-3 px-8 rounded-full transition-all duration-300 flex items-center justify-center">
+                                <i class="fa fa-book mr-2"></i> 了解更多
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+                        <div class="bg-neutral-light rounded-xl p-6 card-hover">
+                            <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                                <i class="fa fa-list-ol text-primary text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-2">40个精心设计的问题</h3>
+                            <p class="text-gray-600">涵盖价值观、兴趣、能力和人际关系等多个维度</p>
+                        </div>
+                        
+                        <div class="bg-neutral-light rounded-xl p-6 card-hover">
+                            <div class="w-14 h-14 bg-secondary/10 rounded-full flex items-center justify-center mb-4">
+                                <i class="fa fa-line-chart text-secondary text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-2">科学的分析报告</h3>
+                            <p class="text-gray-600">基于心理学理论，提供个性化的人生使命洞察</p>
+                        </div>
+                        
+                        <div class="bg-neutral-light rounded-xl p-6 card-hover">
+                            <div class="w-14 h-14 bg-accent/10 rounded-full flex items-center justify-center mb-4">
+                                <i class="fa fa-lightbulb text-accent text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-2">实用的行动建议</h3>
+                            <p class="text-gray-600">根据测评结果，提供具体的成长方向和行动计划</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 关于测评模态框 -->
+            <div id="about-modal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center fade-in">
+                <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                    <div class="p-6 border-b">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-xl font-bold text-neutral">关于人生使命测评</h3>
+                            <button id="close-about-modal" class="text-gray-400 hover:text-gray-600">
+                                <i class="fa fa-times text-xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="mb-4 text-gray-600">人生使命测评是一种帮助人们探索内在价值观、兴趣和能力的工具，旨在揭示个人最核心的目标和意义。</p>
+                        
+                        <div class="mt-6">
+                            <h4 class="font-semibold text-lg mb-2">测评内容</h4>
+                            <ul class="list-disc pl-5 text-gray-600 space-y-2">
+                                <li>价值观评估：探索对你最重要的生活原则</li>
+                                <li>兴趣分析：了解你的热情所在和喜欢的活动</li>
+                                <li>能力识别：发现你的优势和潜力领域</li>
+                                <li>人际关系模式：理解你与他人互动的方式</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <h4 class="font-semibold text-lg mb-2">如何使用测评结果</h4>
+                            <ul class="list-disc pl-5 text-gray-600 space-y-2">
+                                <li>深入了解自己的核心优势和价值观</li>
+                                <li>为职业选择、学习方向提供参考</li>
+                                <li>帮助设定长期目标和人生规划</li>
+                                <li>提升自我认知，增强生活满意度</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <h4 class="font-semibold text-lg mb-2">测评说明</h4>
+                            <p class="text-gray-600">本测评结果仅供参考，旨在启发思考和自我探索。每个人的人生道路都是独特的，建议结合自身实际情况进行反思和行动。</p>
+                        </div>
+                    </div>
+                    <div class="p-6 border-t flex justify-end">
+                        <button id="close-about-btn" class="bg-primary hover:bg-primary/90 text-white font-medium py-2 px-6 rounded-full transition-all duration-200">
+                            我明白了
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 测评问题部分 -->
+            <section id="questions-section" class="py-12 hidden fade-in">
+                <div class="bg-white rounded-2xl shadow-lg p-8 md:p-12">
+                    <div class="mb-8">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-2xl font-bold text-neutral" id="question-number">问题 1/40</h2>
+                            <div class="flex items-center">
+                                <span class="text-sm text-gray-500 mr-2" id="progress-text">0%</span>
+                                <div class="w-48 bg-gray-200 rounded-full h-2.5">
+                                    <div class="bg-primary h-2.5 rounded-full progress-animation" id="progress-bar" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <h3 class="text-xl text-neutral" id="question-text">当你想到未来的生活，你最希望自己拥有什么？</h3>
+                    </div>
+                    
+                    <div class="space-y-4 mb-8" id="answers-container">
+                        <div class="answer-option border border-gray-200 rounded-xl p-4 hover:border-primary hover:bg-primary/5 transition-all duration-200 cursor-pointer">
+                            <label class="flex items-start cursor-pointer">
+                                <input type="radio" name="question" class="mt-1 text-primary focus:ring-primary h-5 w-5" value="A">
+                                <span class="ml-3">A. 影响力和改变世界的能力</span>
+                            </label>
+                        </div>
+                        <div class="answer-option border border-gray-200 rounded-xl p-4 hover:border-primary hover:bg-primary/5 transition-all duration-200 cursor-pointer">
+                            <label class="flex items-start cursor-pointer">
+                                <input type="radio" name="question" class="mt-1 text-primary focus:ring-primary h-5 w-5" value="B">
+                                <span class="ml-3">B. 深厚的人际关系和情感连接</span>
+                            </label>
+                        </div>
+                        <div class="answer-option border border-gray-200 rounded-xl p-4 hover:border-primary hover:bg-primary/5 transition-all duration-200 cursor-pointer">
+                            <label class="flex items-start cursor-pointer">
+                                <input type="radio" name="question" class="mt-1 text-primary focus:ring-primary h-5 w-5" value="C">
+                                <span class="ml-3">C. 个人成长和自我实现</span>
+                            </label>
+                        </div>
+                        <div class="answer-option border border-gray-200 rounded-xl p-4 hover:border-primary hover:bg-primary/5 transition-all duration-200 cursor-pointer">
+                            <label class="flex items-start cursor-pointer">
+                                <input type="radio" name="question" class="mt-1 text-primary focus:ring-primary h-5 w-5" value="D">
+                                <span class="ml-3">D. 内心平静和生活平衡</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between mt-8">
+                        <button id="prev-btn" class="bg-white hover:bg-gray-50 text-primary border border-primary font-medium py-2 px-6 rounded-full transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                            <i class="fa fa-arrow-left mr-2"></i> 上一题
+                        </button>
+                        <button id="next-btn" class="bg-primary hover:bg-primary/90 text-white font-medium py-2 px-6 rounded-full transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                            下一题 <i class="fa fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 结果部分 -->
+            <section id="results-section" class="py-12 hidden fade-in">
+                <div class="bg-white rounded-2xl shadow-lg p-8 md:p-12">
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-bold text-neutral mb-4">你的人生使命洞察</h2>
+                        <p class="text-gray-600 text-lg mb-6">基于你的回答，我们分析出以下关于你人生使命的关键洞察</p>
+                    </div>
+                    
+                    <!-- 结果概览 -->
+                    <div class="bg-neutral-light rounded-2xl p-6 mb-10">
+                        <div class="flex flex-col md:flex-row gap-8">
+                            <div class="md:w-1/3">
+                                <div class="text-center">
+                                    <div class="w-32 h-32 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <span class="text-white text-3xl font-bold" id="primary-theme">影响力</span>
+                                    </div>
+                                    <h3 class="text-xl font-semibold mb-2">你的核心使命主题</h3>
+                                    <p class="text-gray-600">你人生的主要驱动力和方向</p>
+                                </div>
+                            </div>
+                            
+                            <div class="md:w-2/3">
+                                <h3 class="text-xl font-semibold mb-4">使命描述</h3>
+                                <p class="text-gray-600 mb-4" id="mission-description">你被赋予改变世界的使命，通过你的创造力、领导力和决心，你有能力影响他人并推动积极的社会变革。你重视公平、正义和进步，善于发现问题并提出创新解决方案。</p>
+                                
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                                    <div class="bg-white rounded-xl p-4 shadow-sm">
+                                        <h4 class="font-semibold mb-2 flex items-center">
+                                            <i class="fa fa-lightbulb text-accent mr-2"></i> 核心优势
+                                        </h4>
+                                        <p class="text-gray-600" id="strengths">领导力、创造力、战略思维、同理心</p>
+                                    </div>
+                                    <div class="bg-white rounded-xl p-4 shadow-sm">
+                                        <h4 class="font-semibold mb-2 flex items-center">
+                                            <i class="fa fa-compass text-secondary mr-2"></i> 成长方向
+                                        </h4>
+                                        <p class="text-gray-600" id="growth-areas">发展执行力、培养耐心、学习授权</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 维度分析 -->
+                    <div class="mb-10">
+                        <h3 class="text-xl font-semibold mb-6">使命维度分析</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="font-semibold mb-4">价值观</h4>
+                                <div class="space-y-4">
+                                    <div>
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-sm font-medium">影响力与改变</span>
+                                            <span class="text-sm text-primary font-medium" id="value1-score">85%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                            <div class="bg-primary h-2.5 rounded-full" id="value1-bar" style="width: 85%"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-sm font-medium">人际关系与连接</span>
+                                            <span class="text-sm text-secondary font-medium" id="value2-score">70%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                            <div class="bg-secondary h-2.5 rounded-full" id="value2-bar" style="width: 70%"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-sm font-medium">个人成长与学习</span>
+                                            <span class="text-sm text-accent font-medium" id="value3-score">75%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                            <div class="bg-accent h-2.5 rounded-full" id="value3-bar" style="width: 75%"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-sm font-medium">平衡与平静</span>
+                                            <span class="text-sm text-gray-600 font-medium" id="value4-score">60%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                            <div class="bg-gray-400 h-2.5 rounded-full" id="value4-bar" style="width: 60%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-semibold mb-4">兴趣与能力</h4>
+                                <div class="space-y-4">
+                                    <div>
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-sm font-medium">创造与创新</span>
+                                            <span class="text-sm text-primary font-medium" id="interest1-score">90%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                            <div class="bg-primary h-2.5 rounded-full" id="interest1-bar" style="width: 90%"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-sm font-medium">领导与组织</span>
+                                            <span class="text-sm text-secondary font-medium" id="interest2-score">80%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                            <div class="bg-secondary h-2.5 rounded-full" id="interest2-bar" style="width: 80%"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-sm font-medium">分析与解决问题</span>
+                                            <span class="text-sm text-accent font-medium" id="interest3-score">75%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                            <div class="bg-accent h-2.5 rounded-full" id="interest3-bar" style="width: 75%"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-sm font-medium">社交与情感支持</span>
+                                            <span class="text-sm text-gray-600 font-medium" id="interest4-score">65%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                            <div class="bg-gray-400 h-2.5 rounded-full" id="interest4-bar" style="width: 65%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 行动建议 -->
+                    <div class="mb-10">
+                        <h3 class="text-xl font-semibold mb-6">行动建议</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="bg-neutral-light rounded-xl p-6 card-hover">
+                                <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                                    <i class="fa fa-bullseye text-primary text-xl"></i>
+                                </div>
+                                <h4 class="font-semibold mb-2">短期目标</h4>
+                                <p class="text-gray-600" id="short-term-goal">寻找一个可以发挥你的创造力和领导能力的项目，开始积累实际影响力。</p>
+                            </div>
+                            
+                            <div class="bg-neutral-light rounded-xl p-6 card-hover">
+                                <div class="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center mb-4">
+                                    <i class="fa fa-road text-secondary text-xl"></i>
+                                </div>
+                                <h4 class="font-semibold mb-2">中期计划</h4>
+                                <p class="text-gray-600" id="medium-term-plan">建立一个志同道合的团队，共同致力于解决你关心的社会问题。</p>
+                            </div>
+                            
+                            <div class="bg-neutral-light rounded-xl p-6 card-hover">
+                                <div class="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mb-4">
+                                    <i class="fa fa-star text-accent text-xl"></i>
+                                </div>
+                                <h4 class="font-semibold mb-2">长期愿景</h4>
+                                <p class="text-gray-600" id="long-term-vision">成为某个领域的思想领袖，通过你的工作和影响力，创造持久的积极变革。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 分享和下载 -->
+                    <div class="flex flex-col sm:flex-row justify-between items-center pt-6 border-t">
+                        <div class="text-gray-600 mb-4 sm:mb-0">
+                            <p>打印或保存你的结果，随时回顾</p>
+                        </div>
+                        <div class="flex space-x-4">
+                            <button id="share-btn" class="bg-white hover:bg-gray-50 text-primary border border-primary font-medium py-2 px-6 rounded-full transition-all duration-200 flex items-center">
+                                <i class="fa fa-share-alt mr-2"></i> 分享结果
+                            </button>
+                            <button id="download-btn" class="bg-primary hover:bg-primary/90 text-white font-medium py-2 px-6 rounded-full transition-all duration-200 flex items-center">
+                                <i class="fa fa-download mr-2"></i> 下载报告
+                            </button>
+                            <button id="restart-btn" class="bg-white hover:bg-gray-50 text-gray-600 border border-gray-300 font-medium py-2 px-6 rounded-full transition-all duration-200 flex items-center">
+                                <i class="fa fa-refresh mr-2"></i> 重新测评
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 密码验证模态框 -->
+            <div id="password-modal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center fade-in">
+                <div class="bg-white rounded-2xl max-w-md w-full p-6">
+                    <div class="text-center mb-6">
+                        <h3 class="text-xl font-bold text-neutral mb-4">获取测评报告</h3>
+                        <p class="text-gray-600">请输入密码以查看您的测评结果</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">密码</label>
+                        <input type="password" id="password-input" class="appearance-none border border-gray-300 rounded-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-full">
+                    </div>
+                    
+                    <div class="text-center mb-6">
+                        <p class="text-gray-600">通过填写免费测评信息登记表即可获取密码</p>
+                        <button id="free-form-btn" class="mt-2 bg-white hover:bg-gray-50 text-primary border border-primary font-medium py-2 px-6 rounded-full transition-all duration-200">
+                            免费测评信息登记表
+                        </button>
+                    </div>
+                    
+                    <div class="text-center">
+                        <button id="submit-password" class="bg-primary hover:bg-primary/90 text-white font-medium py-2 px-6 rounded-full transition-all duration-200">
+                            提交
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-neutral text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">人生使命测评</h3>
+                    <p class="text-gray-300">帮助你发现自己的核心价值和人生方向，实现更有意义的生活。</p>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">相关资源</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">个人成长指南</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">职业规划工具</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">心灵成长课程</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">常见问题</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">联系我们</h3>
+                    <p class="text-gray-300 mb-2">微信：lianheziqiang</p>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">
+                            <i class="fa fa-weixin text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">
+                            <i class="fa fa-weibo text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">
+                            <i class="fa fa-envelope text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-6 border-t border-gray-700 text-center text-gray-400">
+                <p>&copy; 2025 富贵人生俱乐部 保留所有权利</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 测评题目数据
+        const questions = [
+            {
+                id: 1,
+                text: "当你想到未来的生活，你最希望自己拥有什么？",
+                options: [
+                    { value: "A", text: "影响力和改变世界的能力" },
+                    { value: "B", text: "深厚的人际关系和情感连接" },
+                    { value: "C", text: "个人成长和自我实现" },
+                    { value: "D", text: "内心平静和生活平衡" }
+                ]
+            },
+            {
+                id: 2,
+                text: "下列哪句话最能描述你？",
+                options: [
+                    { value: "A", text: "我是一个解决问题的人，喜欢面对挑战" },
+                    { value: "B", text: "我是一个富有同情心的人，喜欢帮助他人" },
+                    { value: "C", text: "我是一个有创造力的人，喜欢探索新想法" },
+                    { value: "D", text: "我是一个有条理的人，喜欢把事情做好" }
+                ]
+            },
+            {
+                id: 3,
+                text: "你最希望在别人眼中成为什么样的人？",
+                options: [
+                    { value: "A", text: "一个有远见和领导力的人" },
+                    { value: "B", text: "一个善良和值得信赖的人" },
+                    { value: "C", text: "一个有创新精神和独特见解的人" },
+                    { value: "D", text: "一个可靠和负责任的人" }
+                ]
+            },
+            {
+                id: 4,
+                text: "哪种活动会让你感到最充实？",
+                options: [
+                    { value: "A", text: "策划并执行一个大型项目" },
+                    { value: "B", text: "倾听朋友的问题并提供支持" },
+                    { value: "C", text: "创造艺术、音乐或写作" },
+                    { value: "D", text: "学习一项新技能或知识" }
+                ]
+            },
+            {
+                id: 5,
+                text: "当你有空闲时间时，你倾向于做什么？",
+                options: [
+                    { value: "A", text: "参与社交活动或组织聚会" },
+                    { value: "B", text: "阅读或学习新事物" },
+                    { value: "C", text: "进行户外活动或锻炼身体" },
+                    { value: "D", text: "安静地反思或冥想" }
+                ]
+            },
+            {
+                id: 6,
+                text: "对你来说，什么是衡量成功最重要的标准？",
+                options: [
+                    { value: "A", text: "实现自己设定的目标" },
+                    { value: "B", text: "拥有健康和满意的人际关系" },
+                    { value: "C", text: "对他人或社会有积极影响" },
+                    { value: "D", text: "在自己的领域中被认可和尊重" }
+                ]
+            },
+            {
+                id: 7,
+                text: "当面临困难抉择时，你最可能依靠什么？",
+                options: [
+                    { value: "A", text: "逻辑和理性分析" },
+                    { value: "B", text: "直觉和内心感受" },
+                    { value: "C", text: "征求他人的建议和意见" },
+                    { value: "D", text: "参考过去的经验和教训" }
+                ]
+            },
+            {
+                id: 8,
+                text: "你认为生命中最珍贵的礼物是什么？",
+                options: [
+                    { value: "A", text: "自由和独立" },
+                    { value: "B", text: "爱和被爱" },
+                    { value: "C", text: "知识和智慧" },
+                    { value: "D", text: "健康和活力" }
+                ]
+            },
+            {
+                id: 9,
+                text: "哪种工作环境最能激发你的创造力？",
+                options: [
+                    { value: "A", text: "有明确目标和结构的团队环境" },
+                    { value: "B", text: "灵活自由、鼓励创新的环境" },
+                    { value: "C", text: "竞争激烈、充满挑战的环境" },
+                    { value: "D", text: "和谐合作、注重人际关系的环境" }
+                ]
+            },
+            {
+                id: 10,
+                text: "当你回顾过去的一年，你最希望自己已经完成了什么？",
+                options: [
+                    { value: "A", text: "学习了一项重要的新技能" },
+                    { value: "B", text: "加强了与家人和朋友的关系" },
+                    { value: "C", text: "为他人或社会做出了贡献" },
+                    { value: "D", text: "实现了一个重要的个人目标" }
+                ]
+            },
+            {
+                id: 11,
+                text: "你认为人生最大的挑战是什么？",
+                options: [
+                    { value: "A", text: "找到自己的人生目标" },
+                    { value: "B", text: "保持内心的平静和快乐" },
+                    { value: "C", text: "在不断变化的世界中适应和成长" },
+                    { value: "D", text: "建立和维护健康的人际关系" }
+                ]
+            },
+            {
+                id: 12,
+                text: "哪种类型的书籍最吸引你？",
+                options: [
+                    { value: "A", text: "自传或成功人士的故事" },
+                    { value: "B", text: "哲学或心理学著作" },
+                    { value: "C", text: "科幻或奇幻小说" },
+                    { value: "D", text: "历史或传记" }
+                ]
+            },
+            {
+                id: 13,
+                text: "在团队中，你通常扮演什么角色？",
+                options: [
+                    { value: "A", text: "领导者或组织者" },
+                    { value: "B", text: "创意提供者或智囊团" },
+                    { value: "C", text: "协调者或沟通桥梁" },
+                    { value: "D", text: "执行者或细节关注者" }
+                ]
+            },
+            {
+                id: 14,
+                text: "什么会让你感到最有成就感？",
+                options: [
+                    { value: "A", text: "克服一个看似不可能的挑战" },
+                    { value: "B", text: "帮助他人解决问题或实现目标" },
+                    { value: "C", text: "创造出有价值的东西" },
+                    { value: "D", text: "完成一个精心计划的项目" }
+                ]
+            },
+            {
+                id: 15,
+                text: "你更倾向于如何度过周末？",
+                options: [
+                    { value: "A", text: "参加社交活动或聚会" },
+                    { value: "B", text: "进行户外活动或运动" },
+                    { value: "C", text: "在家放松或阅读" },
+                    { value: "D", text: "学习新技能或爱好" }
+                ]
+            },
+            {
+                id: 16,
+                text: "对你来说，什么是最重要的价值观？",
+                options: [
+                    { value: "A", text: "自由和独立" },
+                    { value: "B", text: "公平和正义" },
+                    { value: "C", text: "责任和可靠性" },
+                    { value: "D", text: "创造力和创新" }
+                ]
+            },
+            {
+                id: 17,
+                text: "你最希望培养自己的哪种品质？",
+                options: [
+                    { value: "A", text: "勇气和决断力" },
+                    { value: "B", text: "同理心和慈悲心" },
+                    { value: "C", text: "耐心和毅力" },
+                    { value: "D", text: "智慧和洞察力" }
+                ]
+            },
+            {
+                id: 18,
+                text: "当你想到未来的工作，你最看重什么？",
+                options: [
+                    { value: "A", text: "工作的意义和目的" },
+                    { value: "B", text: "工作的稳定性和安全性" },
+                    { value: "C", text: "工作的创造性和挑战性" },
+                    { value: "D", text: "工作与生活的平衡" }
+                ]
+            },
+            {
+                id: 19,
+                text: "哪种类型的演讲最能打动你？",
+                options: [
+                    { value: "A", text: "激励人心、充满激情的演讲" },
+                    { value: "B", text: "逻辑严密、理性分析的演讲" },
+                    { value: "C", text: "幽默风趣、轻松愉快的演讲" },
+                    { value: "D", text: "深刻反思、富有哲理的演讲" }
+                ]
+            },
+            {
+                id: 20,
+                text: "你认为自己最大的优点是什么？",
+                options: [
+                    { value: "A", text: "乐观积极的态度" },
+                    { value: "B", text: "善于与人沟通" },
+                    { value: "C", text: "有很强的分析能力" },
+                    { value: "D", text: "有毅力和决心" }
+                ]
+            },
+            {
+                id: 21,
+                text: "当你需要做出重要决策时，你通常会：",
+                options: [
+                    { value: "A", text: "仔细权衡各种选择的利弊" },
+                    { value: "B", text: "跟随自己的直觉" },
+                    { value: "C", text: "寻求他人的建议和意见" },
+                    { value: "D", text: "回顾过去类似的情况" }
+                ]
+            },
+            {
+                id: 22,
+                text: "你最希望别人记住你的是什么？",
+                options: [
+                    { value: "A", text: "我对世界的贡献" },
+                    { value: "B", text: "我的善良和爱心" },
+                    { value: "C", text: "我的创造力和创新" },
+                    { value: "D", text: "我的智慧和知识" }
+                ]
+            },
+            {
+                id: 23,
+                text: "哪种类型的旅行最吸引你？",
+                options: [
+                    { value: "A", text: "探险未知的地方" },
+                    { value: "B", text: "文化体验和历史探索" },
+                    { value: "C", text: "放松身心的度假" },
+                    { value: "D", text: "学习新技能的旅行" }
+                ]
+            },
+            {
+                id: 24,
+                text: "你认为人生中最美好的事情是什么？",
+                options: [
+                    { value: "A", text: "实现自己的梦想" },
+                    { value: "B", text: "拥有健康和幸福的家庭" },
+                    { value: "C", text: "体验丰富多彩的生活" },
+                    { value: "D", text: "不断学习和成长" }
+                ]
+            },
+            {
+                id: 25,
+                text: "当你面对压力时，你通常会：",
+                options: [
+                    { value: "A", text: "制定详细的计划来解决问题" },
+                    { value: "B", text: "寻求朋友或家人的支持" },
+                    { value: "C", text: "通过运动或其他活动释放压力" },
+                    { value: "D", text: "独处思考，寻找内心的平静" }
+                ]
+            },
+            {
+                id: 26,
+                text: "你更倾向于关注：",
+                options: [
+                    { value: "A", text: "眼前的现实" },
+                    { value: "B", text: "未来的可能性" },
+                    { value: "C", text: "人际关系和情感" },
+                    { value: "D", text: "事实和数据" }
+                ]
+            },
+            {
+                id: 27,
+                text: "你认为一个成功的人生应该是：",
+                options: [
+                    { value: "A", text: "实现了自己的目标和梦想" },
+                    { value: "B", text: "对他人和社会有积极的影响" },
+                    { value: "C", text: "享受生活，体验快乐" },
+                    { value: "D", text: "不断成长和进步" }
+                ]
+            },
+            {
+                id: 28,
+                text: "哪种类型的艺术最能引起你的共鸣？",
+                options: [
+                    { value: "A", text: "音乐" },
+                    { value: "B", text: "绘画" },
+                    { value: "C", text: "文学" },
+                    { value: "D", text: "戏剧" }
+                ]
+            },
+            {
+                id: 29,
+                text: "你最喜欢的学习方式是什么？",
+                options: [
+                    { value: "A", text: "通过实践和动手操作" },
+                    { value: "B", text: "通过阅读和研究" },
+                    { value: "C", text: "通过与他人讨论和交流" },
+                    { value: "D", text: "通过观察和模仿" }
+                ]
+            },
+            {
+                id: 30,
+                text: "当你与他人合作时，你最看重什么？",
+                options: [
+                    { value: "A", text: "明确的目标和分工" },
+                    { value: "B", text: "良好的沟通和团队氛围" },
+                    { value: "C", text: "创新和创意" },
+                    { value: "D", text: "效率和结果" }
+                ]
+            },
+            {
+                id: 31,
+                text: "你认为人生最重要的教训是什么？",
+                options: [
+                    { value: "A", text: "保持真实的自己" },
+                    { value: "B", text: "学会感恩和珍惜" },
+                    { value: "C", text: "不断追求进步" },
+                    { value: "D", text: "关爱他人" }
+                ]
+            },
+            {
+                id: 32,
+                text: "哪种类型的工作会让你感到最有动力？",
+                options: [
+                    { value: "A", text: "有明确的目标和挑战" },
+                    { value: "B", text: "能够帮助他人" },
+                    { value: "C", text: "允许发挥创造力" },
+                    { value: "D", text: "提供学习和成长的机会" }
+                ]
+            },
+            {
+                id: 33,
+                text: "你最希望改善自己的哪个方面？",
+                options: [
+                    { value: "A", text: "时间管理能力" },
+                    { value: "B", text: "沟通能力" },
+                    { value: "C", text: "决策能力" },
+                    { value: "D", text: "情绪管理能力" }
+                ]
+            },
+            {
+                id: 34,
+                text: "当你有一个想法时，你通常会：",
+                options: [
+                    { value: "A", text: "立即采取行动" },
+                    { value: "B", text: "与他人分享并寻求反馈" },
+                    { value: "C", text: "仔细思考和规划" },
+                    { value: "D", text: "先观察和收集信息" }
+                ]
+            },
+            {
+                id: 35,
+                text: "你认为人生中最困难的部分是什么？",
+                options: [
+                    { value: "A", text: "面对不确定性" },
+                    { value: "B", text: "处理失败和挫折" },
+                    { value: "C", text: "平衡责任和个人需求" },
+                    { value: "D", text: "理解自己和他人" }
+                ]
+            },
+            {
+                id: 36,
+                text: "哪种类型的社交活动最吸引你？",
+                options: [
+                    { value: "A", text: "与志同道合的人讨论想法" },
+                    { value: "B", text: "参加大型聚会或活动" },
+                    { value: "C", text: "与亲密朋友的小型聚会" },
+                    { value: "D", text: "志愿者活动或社区服务" }
+                ]
+            },
+            {
+                id: 37,
+                text: "你认为成功的关键是什么？",
+                options: [
+                    { value: "A", text: "努力工作和毅力" },
+                    { value: "B", text: "天赋和才能" },
+                    { value: "C", text: "机会和运气" },
+                    { value: "D", text: "人际关系和团队合作" }
+                ]
+            },
+            {
+                id: 38,
+                text: "当你年老回顾一生时，你最希望自己没有错过什么？",
+                options: [
+                    { value: "A", text: "追求自己的激情和梦想" },
+                    { value: "B", text: "与家人和朋友建立深厚的关系" },
+                    { value: "C", text: "体验不同的文化和生活方式" },
+                    { value: "D", text: "为世界做出有意义的贡献" }
+                ]
+            },
+            {
+                id: 39,
+                text: "你更倾向于如何解决冲突？",
+                options: [
+                    { value: "A", text: "寻求妥协和共识" },
+                    { value: "B", text: "直接面对并解决问题" },
+                    { value: "C", text: "暂时回避，等待冷静下来" },
+                    { value: "D", text: "寻求第三方的帮助" }
+                ]
+            },
+            {
+                id: 40,
+                text: "对你来说，幸福是什么？",
+                options: [
+                    { value: "A", text: "实现自己的潜力" },
+                    { value: "B", text: "拥有健康和快乐的生活" },
+                    { value: "C", text: "与他人建立有意义的关系" },
+                    { value: "D", text: "内心的平静和满足" }
+                ]
+            }
+        ];
+
+        // 结果类型数据
+        const resultTypes = [
+            {
+                type: "影响力",
+                description: "你被赋予改变世界的使命，通过你的创造力、领导力和决心，你有能力影响他人并推动积极的社会变革。你重视公平、正义和进步，善于发现问题并提出创新解决方案。",
+                strengths: "领导力、创造力、战略思维、同理心",
+                growthAreas: "发展执行力、培养耐心、学习授权",
+                shortTermGoal: "寻找一个可以发挥你的创造力和领导能力的项目，开始积累实际影响力。",
+                mediumTermPlan: "建立一个志同道合的团队，共同致力于解决你关心的社会问题。",
+                longTermVision: "成为某个领域的思想领袖，通过你的工作和影响力，创造持久的积极变革。",
+                value1: 85,
+                value2: 70,
+                value3: 75,
+                value4: 60,
+                interest1: 90,
+                interest2: 80,
+                interest3: 75,
+                interest4: 65
+            },
+            {
+                type: "人际关系",
+                description: "你的使命围绕着建立和维护深厚的人际关系。你富有同理心、温暖和包容，擅长理解他人的需求并提供支持。你相信通过爱和连接，可以创造一个更美好的世界。",
+                strengths: "同理心、沟通能力、团队合作、倾听",
+                growthAreas: "发展个人边界、学会拒绝、培养独处能力",
+                shortTermGoal: "主动与一个疏远的朋友或家人重新建立联系，加强现有关系。",
+                mediumTermPlan: "参与一个社区组织或志愿者活动，扩大你的社交圈并帮助他人。",
+                longTermVision: "成为他人生活中的积极影响者，通过你的人际关系网络创造支持和爱的环境。",
+                value1: 70,
+                value2: 90,
+                value3: 65,
+                value4: 80,
+                interest1: 60,
+                interest2: 65,
+                interest3: 55,
+                interest4: 95
+            },
+            {
+                type: "个人成长",
+                description: "你的人生使命聚焦于不断学习、成长和自我实现。你对知识充满渴望，追求个人卓越，并鼓励他人也这样做。你相信每个人都有未被发掘的潜力，而你的角色是帮助自己和他人实现这些潜力。",
+                strengths: "好奇心、适应能力、自我反思、学习能力",
+                growthAreas: "发展执行力、克服拖延、培养坚持性",
+                shortTermGoal: "开始学习一项新技能或知识领域，挑战你的舒适区。",
+                mediumTermPlan: "制定个人成长计划，设定明确的目标和里程碑。",
+                longTermVision: "成为终身学习者，通过你的成长激励他人追求自己的发展和幸福。",
+                value1: 65,
+                value2: 70,
+                value3: 90,
+                value4: 75,
+                interest1: 80,
+                interest2: 60,
+                interest3: 85,
+                interest4: 65
+            },
+            {
+                type: "平衡与和谐",
+                description: "你的使命是在生活的各个方面创造平衡与和谐。你重视内心的平静、健康和生活质量，并且擅长帮助他人找到同样的平衡。你相信通过保持中心和冷静，你可以成为周围人的稳定力量。",
+                strengths: "冷静、情绪管理、组织能力、适应能力",
+                growthAreas: "发展决策能力、学会说'不'、培养自信",
+                shortTermGoal: "建立日常冥想或正念练习，培养内心的平静。",
+                mediumTermPlan: "评估你生活中的各个领域，确定需要更多平衡的地方并制定调整计划。",
+                longTermVision: "成为平衡生活的榜样，通过你的实践和指导帮助他人找到平静和满足。",
+                value1: 60,
+                value2: 80,
+                value3: 70,
+                value4: 90,
+                interest1: 65,
+                interest2: 55,
+                interest3: 70,
+                interest4: 85
+            }
+        ];
+
+        // 应用状态
+        const state = {
+            currentQuestion: 0,
+            answers: Array(questions.length).fill(null),
+            result: null
+        };
+
+        // DOM 元素
+        const welcomeSection = document.getElementById('welcome-section');
+        const questionsSection = document.getElementById('questions-section');
+        const resultsSection = document.getElementById('results-section');
+        const questionNumber = document.getElementById('question-number');
+        const questionText = document.getElementById('question-text');
+        const answersContainer = document.getElementById('answers-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const startBtn = document.getElementById('start-btn');
+        const learnMoreBtn = document.getElementById('learn-more-btn');
+        const aboutBtn = document.getElementById('about-btn');
+        const mobileAboutBtn = document.getElementById('mobile-about-btn');
+        const resultsBtn = document.getElementById('results-btn');
+        const mobileResultsBtn = document.getElementById('mobile-results-btn');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const aboutModal = document.getElementById('about-modal');
+        const closeAboutModal = document.getElementById('close-about-modal');
+        const closeAboutBtn = document.getElementById('close-about-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const navbar = document.getElementById('navbar');
+        const passwordModal = document.getElementById('password-modal');
+        const passwordInput = document.getElementById('password-input');
+        const submitPassword = document.getElementById('submit-password');
+        const freeFormBtn = document.getElementById('free-form-btn');
+
+        // 更新导航栏样式
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                navbar.classList.add('shadow-lg');
+                navbar.classList.remove('shadow-md');
+            } else {
+                navbar.classList.remove('shadow-lg');
+                navbar.classList.add('shadow-md');
+            }
+        });
+
+        // 移动端菜单切换
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 打开关于模态框
+        function openAboutModal() {
+            aboutModal.classList.remove('hidden');
+            aboutModal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 关闭关于模态框
+        function closeAboutModalFunc() {
+            aboutModal.classList.add('hidden');
+            aboutModal.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+
+        // 关于模态框事件监听
+        aboutBtn.addEventListener('click', openAboutModal);
+        mobileAboutBtn.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden');
+            openAboutModal();
+        });
+        closeAboutModal.addEventListener('click', closeAboutModalFunc);
+        closeAboutBtn.addEventListener('click', closeAboutModalFunc);
+
+        // 开始测评
+        startBtn.addEventListener('click', () => {
+            welcomeSection.classList.add('hidden');
+            questionsSection.classList.remove('hidden');
+            renderQuestion();
+        });
+
+        // 学习更多按钮
+        learnMoreBtn.addEventListener('click', openAboutModal);
+
+        // 查看结果按钮
+        function openPasswordModal() {
+            passwordModal.classList.remove('hidden');
+            passwordModal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+            passwordInput.focus();
+        }
+
+        // 结果按钮事件监听
+        resultsBtn.addEventListener('click', openPasswordModal);
+        mobileResultsBtn.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden');
+            openPasswordModal();
+        });
+        nextBtn.addEventListener('click', () => {
+            if (state.currentQuestion < questions.length - 1) {
+                state.currentQuestion++;
+                renderQuestion();
+            } else {
+                openPasswordModal();
+            }
+        });
+
+        // 上一题按钮
+        prevBtn.addEventListener('click', () => {
+            if (state.currentQuestion > 0) {
+                state.currentQuestion--;
+                renderQuestion();
+            }
+        });
+
+        // 重新测评按钮
+        restartBtn.addEventListener('click', () => {
+            state.currentQuestion = 0;
+            state.answers = Array(questions.length).fill(null);
+            state.result = null;
+            resultsSection.classList.add('hidden');
+            welcomeSection.classList.remove('hidden');
+            resultsBtn.classList.add('hidden');
+            mobileResultsBtn.classList.add('hidden');
+            progressBar.style.width = '0%';
+            progressText.textContent = '0%';
+        });
+
+        // 渲染当前问题
+        function renderQuestion() {
+            const question = questions[state.currentQuestion];
+            questionNumber.textContent = `问题 ${state.currentQuestion + 1}/${questions.length}`;
+            questionText.textContent = question.text;
+            
+            // 清空答案容器
+            answersContainer.innerHTML = '';
+            
+            // 渲染选项
+            question.options.forEach(option => {
+                const answerDiv = document.createElement('div');
+                answerDiv.className = 'answer-option border border-gray-200 rounded-xl p-4 hover:border-primary hover:bg-primary/5 transition-all duration-200 cursor-pointer';
+                
+                const label = document.createElement('label');
+                label.className = 'flex items-start cursor-pointer';
+                
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = 'question';
+                input.className = 'mt-1 text-primary focus:ring-primary h-5 w-5';
+                input.value = option.value;
+                
+                // 如果已经选择了答案，则选中对应的选项
+                if (state.answers[state.currentQuestion] === option.value) {
+                    input.checked = true;
+                    answerDiv.classList.add('border-primary', 'bg-primary/5');
+                }
+                
+                const span = document.createElement('span');
+                span.className = 'ml-3';
+                span.textContent = `${option.value}. ${option.text}`;
+                
+                label.appendChild(input);
+                label.appendChild(span);
+                answerDiv.appendChild(label);
+                answersContainer.appendChild(answerDiv);
+                
+                // 添加点击事件
+                answerDiv.addEventListener('click', () => {
+                    // 取消其他选项的选中状态
+                    document.querySelectorAll('.answer-option').forEach(div => {
+                        div.classList.remove('border-primary', 'bg-primary/5');
+                    });
+                    
+                    // 设置当前选项为选中状态
+                    answerDiv.classList.add('border-primary', 'bg-primary/5');
+                    input.checked = true;
+                    
+                    // 保存答案
+                    state.answers[state.currentQuestion] = option.value;
+                    
+                    // 更新按钮状态
+                    updateButtonStates();
+                });
+            });
+            
+            // 更新按钮状态
+            updateButtonStates();
+            
+            // 更新进度条
+            const progress = (state.currentQuestion / questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            progressText.textContent = `${Math.round(progress)}%`;
+            
+            // 滚动到顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 更新按钮状态
+        function updateButtonStates() {
+            // 上一题按钮
+            prevBtn.disabled = state.currentQuestion === 0;
+            
+            // 下一题按钮
+            nextBtn.disabled = state.answers[state.currentQuestion] === null;
+            
+            // 如果是最后一题且已选择答案，修改下一题按钮文本
+            if (state.currentQuestion === questions.length - 1 && state.answers[state.currentQuestion] !== null) {
+                nextBtn.innerHTML = '获取测评报告 <i class="fa fa-arrow-right ml-2"></i>';
+            } else {
+                nextBtn.innerHTML = '下一题 <i class="fa fa-arrow-right ml-2"></i>';
+            }
+        }
+
+        // 关闭密码模态框
+        function closePasswordModal() {
+            passwordModal.classList.add('hidden');
+            passwordModal.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+
+        // 提交密码
+        submitPassword.addEventListener('click', () => {
+            const password = passwordInput.value.trim();
+            if (password === 'lianheziqiang') {
+                closePasswordModal();
+                goToResults();
+            } else {
+                passwordInput.value = '';
+                alert('您的密码不正确');
+                passwordInput.focus();
+            }
+        });
+
+        // 按下回车键提交密码
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                submitPassword.click();
+            }
+        });
+
+        // 打开免费测评信息登记表链接
+        freeFormBtn.addEventListener('click', () => {
+            window.open('https://doc.weixin.qq.com/forms/ANgASAfkAEwASsATgbSAMcCNiQYbJI1Tf?page=1', '_blank');
+        });
+
+        // 计算测评结果
+        function calculateResults() {
+            // 计分系统
+            const scores = {
+                A: 0, // 影响力
+                B: 0, // 人际关系
+                C: 0, // 个人成长
+                D: 0  // 平衡与和谐
+            };
+            
+            // 计算每个选项的得分
+            state.answers.forEach(answer => {
+                if (answer) {
+                    scores[answer]++;
+                }
+            });
+            
+            // 找出最高分的类型
+            let maxScore = 0;
+            let dominantType = 'A';
+            
+            for (const type in scores) {
+                if (scores[type] > maxScore) {
+                    maxScore = scores[type];
+                    dominantType = type;
+                }
+            }
+            
+            // 根据选项映射到结果类型
+            const typeMap = {
+                A: 0, // 影响力
+                B: 1, // 人际关系
+                C: 2, // 个人成长
+                D: 3  // 平衡与和谐
+            };
+            
+            // 保存结果
+            state.result = resultTypes[typeMap[dominantType]];
+        }
+
+        // 渲染结果
+        function renderResults() {
+            if (!state.result) return;
+            
+            // 更新结果内容
+            document.getElementById('primary-theme').textContent = state.result.type;
+            document.getElementById('mission-description').textContent = state.result.description           ;
+ document.getElementById('strengths').textContent = state.result.strengths;
+            document.getElementById('growth-areas').textContent = state.result.growthAreas;
+            document.getElementById('short-term-goal').textContent = state.result.shortTermGoal;
+            document.getElementById('medium-term-plan').textContent = state.result.mediumTermPlan;
+            document.getElementById('long-term-vision').textContent = state.result.longTermVision;
+            
+            // 更新图表
+            document.getElementById('value1-score').textContent = `${state.result.value1}%`;
+            document.getElementById('value1-bar').style.width = `${state.result.value1}%`;
+            document.getElementById('value2-score').textContent = `${state.result.value2}%`;
+            document.getElementById('value2-bar').style.width = `${state.result.value2}%`;
+            document.getElementById('value3-score').textContent = `${state.result.value3}%`;
+            document.getElementById('value3-bar').style.width = `${state.result.value3}%`;
+            document.getElementById('value4-score').textContent = `${state.result.value4}%`;
+            document.getElementById('value4-bar').style.width = `${state.result.value4}%`;
+            
+            document.getElementById('interest1-score').textContent = `${state.result.interest1}%`;
+            document.getElementById('interest1-bar').style.width = `${state.result.interest1}%`;
+            document.getElementById('interest2-score').textContent = `${state.result.interest2}%`;
+            document.getElementById('interest2-bar').style.width = `${state.result.interest2}%`;
+            document.getElementById('interest3-score').textContent = `${state.result.interest3}%`;
+            document.getElementById('interest3-bar').style.width = `${state.result.interest3}%`;
+            document.getElementById('interest4-score').textContent = `${state.result.interest4}%`;
+            document.getElementById('interest4-bar').style.width = `${state.result.interest4}%`;
+        }
+
+        // 跳转到结果页面
+        function goToResults() {
+            calculateResults();
+            renderResults();
+            questionsSection.classList.add('hidden');
+            resultsSection.classList.remove('hidden');
+            resultsBtn.classList.remove('hidden');
+            mobileResultsBtn.classList.remove('hidden');
+        }
+
+        // 分享结果按钮
+        document.getElementById('share-btn').addEventListener('click', () => {
+            alert('分享功能已复制链接到剪贴板！');
+        });
+
+        // 下载报告按钮
+        document.getElementById('download-btn').addEventListener('click', () => {
+            alert('报告下载功能即将推出！');
+        });
+    </script>
+</body>
+</html>

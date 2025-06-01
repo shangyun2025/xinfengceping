@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBTI财富心理匹配测试</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1d4ed8;
+            --secondary-color: #f5f7fa;
+            --text-color: #1a365d;
+            --border-radius: 16px;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 5vh;
+        }
+
+        .logo-text {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.125rem;
+            color: #4b5563;
+            margin-bottom: 2rem;
+        }
+
+        .progress {
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary-color);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .question {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+        }
+
+        .options {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .option {
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            border-color: var(--primary-color);
+            transform: scale(1.02);
+        }
+
+        .selected {
+            border-color: var(--primary-color);
+            background: #f3f4f6;
+        }
+
+        .button {
+            width: calc(50% - 0.5rem);
+            padding: 1rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 2rem;
+            transition: transform 0.2s ease;
+        }
+
+        .button:hover {
+            transform: scale(1.03);
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .report-container {
+            display: none;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 5vh;
+        }
+
+        .report-title {
+            text-align: center;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+        }
+
+        .report-subtitle {
+            text-align: center;
+            font-size: 1.125rem;
+            color: #4b5563;
+            margin-bottom: 2rem;
+        }
+
+        .report-result {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+        }
+
+        .report-suggestion {
+            font-size: 1.125rem;
+            color: #4b5563;
+            margin-bottom: 2rem;
+        }
+
+        .report-detail {
+            font-size: 1.125rem;
+            color: #4b5563;
+        }
+
+        .copyright {
+            text-align: center;
+            font-size: 0.875rem;
+            color: #4b5563;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .container,
+            .report-container {
+                padding: 1.5rem;
+            }
+
+            .title,
+            .report-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* 密码弹窗样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 2rem;
+            border: none;
+            width: 80%;
+            max-width: 500px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            color: #aaa;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .close:hover {
+            color: var(--text-color);
+            transform: rotate(90deg);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .modal-desc {
+            font-size: 1rem;
+            color: #4b5563;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 1rem;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.2);
+        }
+
+        .form-button {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .form-button:hover {
+            background-color: #1a365d;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3);
+        }
+
+        .reg-link {
+            display: inline-block;
+            margin-top: 1rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .reg-link:hover {
+            text-decoration: underline;
+            transform: scale(1.03);
+        }
+
+        .modal-footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.875rem;
+            color: #4b5563;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="assessment-container">
+        <div class="logo-text">富贵人生俱乐部</div>
+        <h1 class="title">财富心理匹配测试</h1>
+        <p class="subtitle">12道题解析你的财富心理密码，生成专属财富成长方案</p>
+
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div id="questionContainer"></div>
+
+        <div class="button-container">
+            <button class="button" id="prevBtn" onclick="prevQuestion()" disabled>上一步</button>
+            <button class="button" id="nextBtn" onclick="showPasswordModal()">获取测评报告</button>
+        </div>
+        <div class="copyright">© 2025 尚合强版权所有</div>
+    </div>
+
+    <div class="report-container" id="report-container">
+        <div class="logo-text">富贵人生俱乐部</div>
+        <h1 class="report-title">财富心理测评报告</h1>
+        <p class="report-subtitle">以下是您的专属财富心理测评结果及建议</p>
+
+        <div class="report-result" id="result"></div>
+        <div class="report-suggestion" id="suggestion"></div>
+        <div class="report-detail" id="detail"></div>
+        <div class="copyright">© 2025 尚合强版权所有</div>
+    </div>
+
+    <!-- 密码弹窗 -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closePasswordModal()">&times;</span>
+            <h2 class="modal-title">获取测评报告</h2>
+            <p class="modal-desc">请填写以下信息获取密码：</p>
+            <a href="https://doc.weixin.qq.com/forms/ANgASAfkAEwASsATgbSAMcCNiQYbJI1Tf?page=1" target="_blank" class="button" style="width: 100%; margin-top: 1rem;">免费测评信息登记表</a>
+            <div class="form-group" style="margin-top: 1.5rem;">
+                <label for="passwordInput" class="form-label">输入获取的密码：</label>
+                <input type="password" id="passwordInput" class="form-input" placeholder="请输入密码">
+            </div>
+            <div style="margin-top: 1rem;">
+                <button class="form-button" onclick="verifyPassword()">提交密码</button>
+            </div>
+            <div class="modal-footer">
+                提交密码后即可获得测评报告
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 测试题目设计（基于MBTI四维度+财富心理场景）
+        const questions = [
+            {
+                id: 1,
+                text: "消费时你更关注：",
+                options: [
+                    { text: "性价比与实用性（S）", type: 'S' },
+                    { text: "品牌理念与情感共鸣（N）", type: 'N' },
+                    { text: "他人推荐与社交认同（F）", type: 'F' },
+                    { text: "数据对比与风险评估（T）", type: 'T' }
+                ]
+            },
+            {
+                id: 2,
+                text: "制定理财计划时你倾向于：",
+                options: [
+                    { text: "严格按预算执行（J）", type: 'J' },
+                    { text: "保持灵活调整空间（P）", type: 'P' }
+                ]
+            },
+            {
+                id: 3,
+                text: "在社交场合中，有人介绍新的投资机会，你会：",
+                options: [
+                    { text: "积极参与讨论并主动询问细节（E）", type: 'E' },
+                    { text: "先默默倾听，之后再私下研究（I）", type: 'I' }
+                ]
+            },
+            {
+                id: 4,
+                text: "对于市场上新兴的金融产品，你：",
+                options: [
+                    { text: "基于已有经验和数据判断是否参与（S）", type: 'S' },
+                    { text: "凭借直觉和对未来趋势的想象决定是否尝试（N）", type: 'N' }
+                ]
+            },
+            {
+                id: 5,
+                text: "当投资组合出现波动时，你：",
+                options: [
+                    { text: "冷静分析数据，按既定策略调整（T）", type: 'T' },
+                    { text: "会因担心损失而感到焦虑，容易受情绪影响（F）", type: 'F' }
+                ]
+            },
+            {
+                id: 6,
+                text: "你更喜欢通过哪种方式学习理财知识：",
+                options: [
+                    { text: "参加线下讲座和交流活动（E）", type: 'E' },
+                    { text: "自己阅读书籍和在线课程（I）", type: 'I' }
+                ]
+            },
+            {
+                id: 7,
+                text: "面对一笔意外之财，你首先会：",
+                options: [
+                    { text: "制定详细的储蓄和投资计划（J）", type: 'J' },
+                    { text: "先放着，等有想法了再做决定（P）", type: 'P' }
+                ]
+            },
+            {
+                id: 8,
+                text: "在评估投资项目时，你更看重：",
+                options: [
+                    { text: "项目当前的实际收益和稳定性（S）", type: 'S' },
+                    { text: "项目未来的发展潜力和创新性（N）", type: 'N' }
+                ]
+            },
+            {
+                id: 9,
+                text: "如果朋友向你推荐一个投资项目，你会：",
+                options: [
+                    { text: "基于对朋友的信任，快速参与（F）", type: 'F' },
+                    { text: "自己深入研究后再做决定（T）", type: 'T' }
+                ]
+            },
+            {
+                id: 10,
+                text: "你在规划长期财务目标时：",
+                options: [
+                    { text: "制定精确的时间表和步骤（J）", type: 'J' },
+                    { text: "有大致方向，但不设严格期限（P）", type: 'P' }
+                ]
+            },
+            {
+                id: 11,
+                text: "在理财决策过程中，你更倾向于：",
+                options: [
+                    { text: "依靠自己的独立思考和判断（I）", type: 'I' },
+                    { text: "和他人交流并参考多方意见（E）", type: 'E' }
+                ]
+            },
+            {
+                id: 12,
+                text: "面对突发大额支出时你会：",
+                options: [
+                    { text: "立即启动应急储蓄（T）", type: 'T' },
+                    { text: "寻求亲友支持并规划还款（F）", type: 'F' }
+                ]
+            }
+        ];
+
+        let currentQuestion = 0;
+        const answers = {};
+
+        function renderQuestion() {
+            const container = document.getElementById('questionContainer');
+            container.innerHTML = `
+                <div class="question">第${currentQuestion + 1}题</div>
+                <p class="question">${questions[currentQuestion].text}</p>
+                ${questions[currentQuestion].options.map(option =>
+                `<div class="option" data-type="${option.type || ''}" 
+                  onclick="selectOption(this)">${option.text}</div>`
+            ).join('')}
+            `;
+
+            // 恢复上一题选择状态
+            if (answers[questions[currentQuestion].id]) {
+                const options = document.querySelectorAll('.option');
+                options.forEach(opt => {
+                    if (opt.dataset.type === answers[questions[currentQuestion].id]) {
+                        opt.classList.add('selected');
+                    }
+                });
+            }
+
+            // 控制上一题按钮状态
+            const prevBtn = document.getElementById('prevBtn');
+            prevBtn.disabled = currentQuestion === 0;
+
+            // 控制下一步按钮文本
+            const nextBtn = document.getElementById('nextBtn');
+            nextBtn.textContent = currentQuestion === questions.length - 1 ? '获取测评报告' : '下一步';
+        }
+
+        function selectOption(option) {
+            const options = document.querySelectorAll('.option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            answers[questions[currentQuestion].id] = option.dataset.type;
+            
+            if (currentQuestion < questions.length - 1) {
+                nextQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (!answers[questions[currentQuestion].id]) {
+                alert('请选择一个选项');
+                return;
+            }
+            currentQuestion++;
+            updateProgress();
+            renderQuestion();
+        }
+
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                updateProgress();
+                renderQuestion();
+            }
+        }
+
+        function updateProgress() {
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = `${(currentQuestion + 1) / questions.length * 100}%`;
+        }
+
+        // 显示密码弹窗
+        function showPasswordModal() {
+            if (currentQuestion < questions.length - 1 || !answers[questions[currentQuestion].id]) {
+                alert('请完成所有题目');
+                return;
+            }
+            document.getElementById('passwordModal').style.display = 'block';
+        }
+
+        // 关闭密码弹窗
+        function closePasswordModal() {
+            document.getElementById('passwordModal').style.display = 'none';
+        }
+
+        // 验证密码
+        function verifyPassword() {
+            const password = document.getElementById('passwordInput').value;
+            if (password === "lianheziqiang") {
+                closePasswordModal();
+                generateReport();
+            } else {
+                alert('您的密码不正确');
+            }
+        }
+
+        function generateReport() {
+            const typeCounts = {
+                E: 0, I: 0,
+                S: 0, N: 0,
+                T: 0, F: 0,
+                J: 0, P: 0
+            };
+
+            Object.values(answers).forEach(answer => {
+                if (answer) {
+                    typeCounts[answer]++;
+                }
+            });
+
+            const firstLetter = typeCounts.E > typeCounts.I ? 'E' : 'I';
+            const secondLetter = typeCounts.S > typeCounts.N ? 'S' : 'N';
+            const thirdLetter = typeCounts.T > typeCounts.F ? 'T' : 'F';
+            const fourthLetter = typeCounts.J > typeCounts.P ? 'J' : 'P';
+
+            const type = `${firstLetter}${secondLetter}${thirdLetter}${fourthLetter}`;
+
+            let membershipSuggestion = '';
+            let detailText = '';
+            let personalityIntro = '';
+            let courseRecommend = '';
+            switch (type) {
+                case 'ESTJ':
+                    membershipSuggestion = '黄金会员';
+                    personalityIntro = 'ESTJ型的人外向、务实、理性且决断，注重组织和秩序，喜欢按照规则和计划行事。他们善于领导和管理，有很强的责任心和执行力。';
+                    courseRecommend = '推荐您参加“高级投资策略与风险管理课程”，该课程深入剖析各种投资工具和策略，帮助您更好地应对市场风险，实现财富的稳健增长。同时，“家族财富传承规划课程”可以满足您对家族财富长远规划的需求，学习如何制定有效的传承方案。';
+                    detailText = `您是外向、务实、理性且决断的人，在财富管理上有优势。社交能力让您能获取投资信息；务实使您倾向稳健投资；理性助您客观决策；决断力让您按计划理财。<br><br>
+                        黄金会员权益适配您：定制家族传承方案满足财富长远规划；对接高端资源与合作机会助您拓展版图；年度4次1v1心理教练助您了解理财价值观；智能投顾调仓建议帮您应对市场波动；季度沙龙供您交流学习。`;
+                    break;
+                case 'ESFJ':
+                    membershipSuggestion = '白银会员';
+                    personalityIntro = 'ESFJ型的人外向友好，注重人际关系和社会认同，富有同情心和责任感。他们善于与人沟通和合作，喜欢帮助他人。';
+                    courseRecommend = '“社交理财与人脉拓展课程”适合您，它将教您如何通过社交活动拓展人脉资源，发现更多的投资机会。“消费心理学与理财规划课程”可以帮助您更好地理解自己的消费行为，制定合理的理财计划。';
+                    detailText = `您外向友好，注重人际关系和社会认同。在理财方面，您可能会受他人影响，也更关注理财对生活和人际关系的影响。白银会员适合您，季度消费行为AI分析报告可以帮助您了解自己的消费模式；周五“财富心理故事会”和月度价值观升级工作坊能让您在社群中学习和交流；工作日12:00 - 14:00专属客服实时答疑可以随时解决您在理财过程中遇到的问题；社群积分兑换《财富心理卡牌》也能增加您的参与感和趣味性。`;
+                    break;
+                case 'ISTJ':
+                    membershipSuggestion = '青铜会员';
+                    personalityIntro = 'ISTJ型的人内向、严谨、有责任心，喜欢按照规则和计划行事。他们注重细节和事实，做事认真负责，有很强的执行力。';
+                    courseRecommend = '“基础理财知识与实践课程”可以帮助您建立扎实的理财基础，了解各种理财工具和方法。“数据分析与投资决策课程”能提升您的数据分析能力，让您在理财决策中更加理性和准确。';
+                    detailText = `您内向、严谨、有责任心，喜欢按照规则和计划行事。在理财上，您会基于已有经验和数据进行决策，注重稳定性。青铜会员可以满足您的基本需求，完整版《金钱心理测评》（含家族影响分析）能帮助您了解自己的财富心理状况；每周2次冥想音频可以帮助您缓解理财压力；月度消费情绪数据看板能让您更好地掌握自己的消费情况。社群标签“青铜觉醒者”和季度导师集中答疑也能让您在一定程度上获得社交和专业指导。`;
+                    break;
+                case 'ISFJ':
+                    membershipSuggestion = '青铜会员或白银会员';
+                    personalityIntro = 'ISFJ型的人内向、善良、有耐心，注重细节和他人感受。他们忠诚可靠，喜欢帮助他人，是很好的倾听者和支持者。';
+                    courseRecommend = '“稳健理财与风险控制课程”适合您，它将教您如何选择稳健的投资产品，有效控制风险。“家庭理财规划课程”可以帮助您更好地规划家庭财务，保障家人的生活。';
+                    detailText = `您内向、善良、有耐心，注重细节和他人感受。在理财方面，您可能会比较保守，更关注理财对家庭和他人的影响。青铜会员或白银会员都比较适合您。如果您更注重基础的财富心理认知和消费情绪管理，青铜会员是不错的选择；如果您希望通过社群交流和专业分析来提升自己的理财水平，白银会员的权益会更有吸引力。`;
+                    break;
+                case 'ESTP':
+                    membershipSuggestion = '黄金会员';
+                    personalityIntro = 'ESTP型的人外向、灵活、喜欢冒险和挑战，对新事物充满好奇心。他们善于应变，能够快速做出决策。';
+                    courseRecommend = '“新兴投资领域与创新模式课程”可以满足您对新投资机会的探索欲望，了解新兴的投资领域和创新模式。“风险管理与应急处理课程”能帮助您在冒险的同时，更好地控制风险。';
+                    detailText = `您外向、灵活、喜欢冒险和挑战。在理财上，您可能会积极参与新的投资机会，但也可能比较冲动。黄金会员为您提供高端资源和跨行业合作机会，满足您拓展财富版图的需求。智能投顾调仓心理建议可以帮助您在冒险的同时控制风险；季度跨行业价值观沙龙能让您结识更多志同道合的人。`;
+                    break;
+                case 'ESFP':
+                    membershipSuggestion = '白银会员';
+                    personalityIntro = 'ESFP型的人外向、热情、喜欢社交和享受生活，具有很强的表现力和感染力。他们乐观积极，善于与人相处。';
+                    courseRecommend = '“消费理财与生活品质提升课程”可以帮助您在享受生活的同时，更好地管理消费。“社交投资与人脉价值课程”能教您如何通过社交活动发现投资机会，提升人脉价值。';
+                    detailText = `您外向、热情、喜欢社交和享受生活。在理财方面，您可能更注重消费的乐趣和社交体验。白银会员的社群活动和互动权益能满足您的社交需求，如周五“财富心理故事会”和月度价值观升级工作坊；季度消费行为AI分析报告可以帮助您在享受生活的同时更好地管理消费。`;
+                    break;
+                case 'ISTP':
+                    membershipSuggestion = '青铜会员或黄金会员';
+                    personalityIntro = 'ISTP型的人内向、冷静、善于分析和解决问题，喜欢通过实践来学习和探索。他们动手能力强，对技术和机械方面有浓厚的兴趣。';
+                    courseRecommend = '“技术分析与投资实战课程”可以提升您的技术分析能力，帮助您在投资中做出更准确的决策。“财富管理与资产配置课程”能让您了解如何合理配置资产，实现财富的保值增值。';
+                    detailText = `您内向、冷静、善于分析和解决问题。在理财上，您会通过自己的研究和实践来做出决策。如果您处于财富积累的初期，青铜会员的基础权益可以帮助您建立财富心理认知；如果您已经有一定的财富基础，黄金会员的高端资源和专业服务能满足您进一步发展的需求。`;
+                    break;
+                case 'ISFP':
+                    membershipSuggestion = '白银会员';
+                    personalityIntro = 'ISFP型的人内向、敏感、注重个人价值观和情感体验，喜欢追求自由和独立。他们富有创造力，对艺术和美学有独特的见解。';
+                    courseRecommend = '“价值观投资与财富规划课程”可以帮助您根据自己的价值观来选择投资项目，实现财富与价值观的统一。“消费美学与理财智慧课程”能让您在消费中体现美学品味，同时合理规划财务。';
+                    detailText = `您内向、敏感、注重个人价值观和情感体验。在理财方面，您可能会根据自己的价值观来选择投资项目。白银会员的月度价值观升级工作坊可以帮助您深入思考自己的财富价值观；季度消费行为AI分析报告能让您了解自己的消费与价值观的匹配度。`;
+                    break;
+                case 'ENTJ':
+                    membershipSuggestion = '钻石会员';
+                    personalityIntro = 'ENTJ型的人外向、有远见、善于领导和决策，具有很强的组织能力和战略眼光。他们自信果断，喜欢挑战和竞争。';
+                    courseRecommend = '“全球金融市场与投资战略课程”可以帮助您了解全球金融市场的动态，制定更具前瞻性的投资战略。“家族财富传承与企业治理课程”能满足您在家族财富传承和企业治理方面的需求。';
+                    detailText = `您外向、有远见、善于领导和决策。在理财上，您会关注未来的发展趋势，有较强的战略眼光。钻石会员提供解决跨代际财富心理冲突、对接全球顶级稀缺资源等权益，能满足您在家族财富传承和全球资源整合方面的需求。家族财富心理基因诊断可以帮助您深入了解家族财富心理问题；全球政商要人圆桌参与权和联合国项目筹备会资格能为您提供高端的社交和合作机会。`;
+                    break;
+                case 'ENTP':
+                    membershipSuggestion = '黄金会员';
+                    personalityIntro = 'ENTP型的人外向、聪明、富有创造力和好奇心，喜欢探索新的领域和可能性。他们思维敏捷，善于辩论和说服他人。';
+                    courseRecommend = '“创新投资与创业金融课程”可以满足您对新投资领域和创新模式的探索欲望，学习如何进行创新投资和创业融资。“金融科技与投资创新课程”能让您了解金融科技的发展趋势，把握投资创新的机会。';
+                    detailText = `您外向、聪明、富有创造力和好奇心。在理财上，您喜欢探索新的投资领域和创新模式。黄金会员的高端资源和跨行业合作机会能满足您的探索欲望；智能投顾调仓心理建议可以帮助您在创新投资中控制风险。`;
+                    break;
+                case 'INTJ':
+                    membershipSuggestion = '黄金会员或钻石会员';
+                    personalityIntro = 'INTJ型的人内向、理性、有独立思考能力和长远规划，喜欢深入分析和研究问题。他们有很强的逻辑思维能力和判断力。';
+                    courseRecommend = '“宏观经济分析与投资决策课程”可以帮助您了解宏观经济形势，做出更明智的投资决策。“家族财富传承规划与风险管理课程”能满足您在家族财富传承和风险管理方面的需求。';
+                    detailText = `您内向、理性、有独立思考能力和长远规划。在理财上，您会基于对未来趋势的分析做出决策。如果您的财富规模较大，钻石会员的权益更能满足您在家族财富传承和全球资源对接方面的需求；如果您还在积累财富的过程中，黄金会员的专业服务和资源也能帮助您实现财富增长。`;
+                    break;
+                case 'INTP':
+                    membershipSuggestion = '黄金会员';
+                    personalityIntro = 'INTP型的人内向、喜欢思考和探索理论知识，对抽象概念和逻辑推理有浓厚的兴趣。他们善于独立思考，有很强的创新能力。';
+                    courseRecommend = '“金融理论与投资模型课程”可以满足您对理论知识的探索需求，学习先进的金融理论和投资模型。“数据分析与量化投资课程”能提升您的数据分析能力，帮助您进行量化投资。';
+                    detailText = `您内向、喜欢思考和探索理论知识。在理财上，您会通过深入研究来做出决策。黄金会员提供的智能投顾调仓心理建议和季度跨行业价值观沙龙能满足您对专业知识和社交交流的需求。`;
+                    break;
+                case 'ENFJ':
+                    membershipSuggestion = '白银会员或黄金会员';
+                    personalityIntro = 'ENFJ型的人外向、有领导力、善于与人沟通和协调，注重他人的需求和感受。他们有很强的感染力和号召力，能够激励他人。';
+                    courseRecommend = '“领导力与财富管理课程”可以帮助您提升领导力和财富管理能力，实现个人和团队的财富目标。“社交影响力与投资机会课程”能让您通过社交影响力发现更多的投资机会。';
+                    detailText = `您外向、有领导力、善于与人沟通和协调。在理财方面，您可能会关注理财对他人和社会的影响。如果您更注重社群交流和价值观提升，白银会员的权益比较合适；如果您有更高的财富目标和资源整合需求，黄金会员的高端服务和资源能满足您的要求。`;
+                    break;
+                case 'ENFP':
+                    membershipSuggestion = '白银会员';
+                    personalityIntro = 'ENFP型的人外向、热情、富有想象力和创造力，喜欢追求自由和变化。他们乐观积极，善于与人相处，能够激发他人的潜力。';
+                    courseRecommend = '“创意投资与财富增长课程”可以满足您的创意和想象力，学习如何进行创意投资，实现财富增长。“人际关系与理财智慧课程”能帮助您通过良好的人际关系获取更多的理财信息和机会。';
+                    detailText = `您外向、热情、富有想象力和创造力。在理财方面，您可能会根据自己的直觉和兴趣来选择投资项目。白银会员的社群活动和价值观升级工作坊能满足您的社交和自我成长需求；季度消费行为AI分析报告可以帮助您更好地管理自己的财务。`;
+                    break;
+                case 'INFJ':
+                    membershipSuggestion = '白银会员或黄金会员';
+                    personalityIntro = 'INFJ型的人内向、有洞察力、注重个人价值观和理想，喜欢深入思考和探索人生的意义。他们有很强的直觉和判断力，能够预见未来的趋势。';
+                    courseRecommend = '“价值观投资与社会影响力课程”可以帮助您根据自己的价值观进行投资，同时实现社会影响力。“长期投资规划与风险管理课程”能让您制定长期的投资规划，有效控制风险。';
+                    detailText = `您内向、有洞察力、注重个人价值观和理想。在理财方面，您可能会根据自己的价值观来选择投资项目，同时也会关注财富对社会的影响。如果您更注重个人成长和社群交流，白银会员的权益可以满足您的需求；如果您有更高的财富目标和社会影响力需求，黄金会员的高端资源和专业服务能帮助您实现目标。`;
+                    break;
+                case 'INFP':
+                    membershipSuggestion = '白银会员';
+                    personalityIntro = 'INFP型的人内向、敏感、富有同情心和想象力，喜欢追求内心的平静和满足。他们有很强的情感体验和创造力，能够表达自己的情感和想法。';
+                    courseRecommend = '“情感理财与幸福生活课程”可以帮助您将情感与理财相结合，实现幸福生活。“价值观驱动的投资策略课程”能让您根据自己的价值观制定投资策略。';
+                    detailText = `您内向、敏感、富有同情心和想象力。在理财方面，您可能会根据自己的价值观和情感来做出决策。白银会员的月度价值观升级工作坊可以帮助您深入思考自己的财富价值观；季度消费行为AI分析报告能让您了解自己的消费与价值观的匹配度。`;
+                    break;
+                default:
+                    membershipSuggestion = '无明确建议';
+                    personalityIntro = '很抱歉，暂时无法为您提供该人格类型的简要介绍。';
+                    courseRecommend = '暂无适配的课程推荐。';
+                    detailText = '很抱歉，暂时没有为您提供详细的分析和建议。';
+            }
+
+            const resultElement = document.getElementById('result');
+            const suggestionElement = document.getElementById('suggestion');
+            const detailElement = document.getElementById('detail');
+
+            resultElement.textContent = `您的MBTI财富心理类型是：${type}`;
+            suggestionElement.textContent = `根据您的测评结果，为您推荐的财富心理成长训练营的会员类型是：${membershipSuggestion}`;
+            detailElement.innerHTML = `<p><strong>人格类型介绍：</strong>${personalityIntro}</p><p><strong>课程推荐：</strong>${courseRecommend}</p><p><strong>详细分析：</strong>${detailText}</p>`;
+
+            document.getElementById('assessment-container').style.display = 'none';
+            document.getElementById('report-container').style.display = 'block';
+        }
+
+        // 初始化
+        renderQuestion();
+        updateProgress();
+
+        // 点击弹窗外部关闭弹窗
+        window.onclick = function(event) {
+            const modal = document.getElementById('passwordModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+
+</html>
