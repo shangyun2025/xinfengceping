@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fuguirensheng | 专业职业规划平台</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#165DFF',
+            secondary: '#36D399',
+            accent: '#FF9F43',
+            neutral: '#1E293B',
+            'base-100': '#FFFFFF',
+            'info': '#3ABFF8',
+            'success': '#36D399',
+            'warning': '#FBBD23',
+            'error': '#F87272',
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-shadow {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      .transition-custom {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .bg-gradient-blue {
+        background: linear-gradient(135deg, #165DFF 0%, #3ABFF8 100%);
+      }
+      .card-hover {
+        @apply hover:shadow-xl hover:-translate-y-1 transition-all duration-300;
+      }
+      .progress-ring-circle {
+        transition: stroke-dashoffset 0.35s;
+        transform: rotate(-90deg);
+        transform-origin: 50% 50%;
+      }
+    }
+  </style>
+</head>
+<body class="font-inter bg-gray-50 text-neutral">
+  <!-- 导航栏 -->
+  <header id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-white/90 backdrop-blur-sm shadow-sm">
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="#" class="flex items-center space-x-2">
+        <div class="w-10 h-10 rounded-lg bg-gradient-blue flex items-center justify-center">
+          <i class="fa fa-compass text-white text-xl"></i>
+        </div>
+        <span class="text-xl font-bold text-primary">新峰职业规划</span>
+      </a>
+      
+      <!-- 桌面导航 -->
+      <nav class="hidden md:flex items-center space-x-8">
+        <a href="#features" class="text-neutral hover:text-primary transition-colors">功能</a>
+        <a href="#assessment" class="text-neutral hover:text-primary transition-colors">测评</a>
+        <a href="#planning" class="text-neutral hover:text-primary transition-colors">规划</a>
+        <a href="#resources" class="text-neutral hover:text-primary transition-colors">资源</a>
+        <a href="#pricing" class="text-neutral hover:text-primary transition-colors">价格</a>
+      </nav>
+      
+      <div class="flex items-center space-x-4">
+        <button class="hidden md:block px-4 py-2 text-primary hover:text-primary/80 transition-colors">登录</button>
+        <button class="px-4 py-2 bg-primary text-white rounded-lg shadow-md hover:bg-primary/90 transition-colors">免费注册</button>
+        <button id="menu-toggle" class="md:hidden text-neutral hover:text-primary transition-colors">
+          <i class="fa fa-bars text-xl"></i>
+        </button>
+      </div>
+    </div>
+    
+    <!-- 移动端导航菜单 -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+      <div class="container mx-auto px-4 py-3 flex flex-col space-y-4">
+        <a href="#features" class="text-neutral hover:text-primary transition-colors py-2">功能</a>
+        <a href="#assessment" class="text-neutral hover:text-primary transition-colors py-2">测评</a>
+        <a href="#planning" class="text-neutral hover:text-primary transition-colors py-2">规划</a>
+        <a href="#resources" class="text-neutral hover:text-primary transition-colors py-2">资源</a>
+        <a href="#pricing" class="text-neutral hover:text-primary transition-colors py-2">价格</a>
+        <a href="#" class="text-primary hover:text-primary/80 transition-colors py-2">登录</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- 英雄区 -->
+    <section class="pt-32 pb-20 md:pt-40 md:pb-32 bg-gradient-to-br from-blue-50 to-indigo-50">
+      <div class="container mx-auto px-4">
+        <div class="flex flex-col md:flex-row items-center">
+          <div class="md:w-1/2 mb-10 md:mb-0">
+            <h1 class="text-[clamp(2.5rem,5vw,4rem)] font-bold leading-tight text-neutral mb-6">
+              找到你的职业方向<br>
+              <span class="text-primary">科学规划未来</span>
+            </h1>
+            <p class="text-lg text-gray-600 mb-8 max-w-xl">
+              通过专业测评、数据驱动分析和个性化规划，助你实现职业突破与转型，让职业发展不再迷茫。
+            </p>
+            <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+              <button class="px-8 py-3 bg-primary text-white rounded-lg shadow-lg hover:shadow-xl hover:bg-primary/90 transition-all text-lg font-medium" onclick="showPasswordPrompt()">
+                开始免费测评
+              </button>
+              <button class="px-8 py-3 bg-white text-primary border border-primary rounded-lg shadow-md hover:shadow-lg hover:bg-gray-50 transition-all text-lg font-medium">
+                了解更多
+              </button>
+            </div>
+            <div class="mt-10 flex items-center space-x-4">
+              <div class="flex -space-x-2">
+                <img src="https://picsum.photos/id/1005/100/100" alt="用户头像" class="w-10 h-10 rounded-full border-2 border-white">
+                <img src="https://picsum.photos/id/1012/100/100" alt="用户头像" class="w-10 h-10 rounded-full border-2 border-white">
+                <img src="https://picsum.photos/id/1027/100/100" alt="用户头像" class="w-10 h-10 rounded-full border-2 border-white">
+                <img src="https://picsum.photos/id/1074/100/100" alt="用户头像" class="w-10 h-10 rounded-full border-2 border-white">
+              </div>
+              <div>
+                <div class="flex items-center">
+                  <div class="flex">
+                    <i class="fa fa-star text-yellow-400"></i>
+                    <i class="fa fa-star text-yellow-400"></i>
+                    <i class="fa fa-star text-yellow-400"></i>
+                    <i class="fa fa-star text-yellow-400"></i>
+                    <i class="fa fa-star text-yellow-400"></i>
+                  </div>
+                  <span class="ml-2 text-sm text-gray-600">4.9/5</span>
+                </div>
+                <p class="text-sm text-gray-600">已有 <span class="font-bold text-primary">10,000+</span> 用户成功规划职业</p>
+              </div>
+            </div>
+          </div>
+          <div class="md:w-1/2 relative">
+            <div class="relative z-10 rounded-2xl overflow-hidden shadow-2xl">
+              <img src="https://picsum.photos/id/1/600/400" alt="职业规划" class="w-full h-auto">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end">
+                <div class="p-6 text-white">
+                  <p class="text-lg font-medium mb-2">李华 | 从销售到产品经理的转型之路</p>
+                  <p class="text-sm opacity-90">通过职业规划，3个月掌握核心技能，成功跳槽大厂</p>
+                </div>
+              </div>
+            </div>
+            <div class="absolute -top-6 -right-6 w-32 h-32 bg-secondary/20 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-primary/20 rounded-full blur-3xl"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 特色功能区 -->
+    <section id="features" class="py-20 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+          <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-neutral mb-4">专业职业规划工具</h2>
+          <p class="text-gray-600 max-w-2xl mx-auto">我们提供全方位的职业规划解决方案，从自我评估到行动计划，助你实现职业目标</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- 功能卡片1 -->
+          <div class="bg-white rounded-xl shadow-lg p-8 card-hover">
+            <div class="w-14 h-14 rounded-lg bg-blue-100 flex items-center justify-center mb-6">
+              <i class="fa fa-user-circle text-primary text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-4">专业自我评估</h3>
+            <p class="text-gray-600 mb-6">基于心理学和职业发展理论的专业测评，全面了解你的兴趣、性格和能力倾向。</p>
+            <ul class="space-y-2 mb-6">
+              <li class="flex items-start">
+                <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                <span>霍兰德职业兴趣测试</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                <span>MBTI性格分析</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                <span>能力优势评估</span>
+              </li>
+            </ul>
+            <a href="#" class="text-primary font-medium hover:text-primary/80 transition-colors flex items-center">
+              了解更多 <i class="fa fa-arrow-right ml-2"></i>
+            </a>
+          </div>
+          
+          <!-- 功能卡片2 -->
+          <div class="bg-white rounded-xl shadow-lg p-8 card-hover">
+            <div class="w-14 h-14 rounded-lg bg-green-100 flex items-center justify-center mb-6">
+              <i class="fa fa-line-chart text-secondary text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-4">行业与岗位分析</h3>
+            <p class="text-gray-600 mb-6">基于大数据分析行业趋势、岗位需求和薪资水平，帮助你做出明智的职业选择。</p>
+            <ul class="space-y-2 mb-6">
+              <li class="flex items-start">
+                <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                <span>行业发展趋势报告</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                <span>岗位技能要求分析</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                <span>薪资水平与地域分布</span>
+              </li>
+            </ul>
+            <a href="#" class="text-primary font-medium hover:text-primary/80 transition-colors flex items-center">
+              了解更多 <i class="fa fa-arrow-right ml-2"></i>
+            </a>
+          </div>
+          
+          <!-- 功能卡片3 -->
+          <div class="bg-white rounded-xl shadow-lg p-8 card-hover">
+            <div class="w-14 h-14 rounded-lg bg-orange-100 flex items-center justify-center mb-6">
+              <i class="fa fa-calendar-check-o text-accent text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-4">个性化行动计划</h3>
+            <p class="text-gray-600 mb-6">根据你的目标和现状，生成详细的行动计划和时间节点，帮助你高效达成职业目标。</p>
+            <ul class="space-y-2 mb-6">
+              <li class="flex items-start">
+                <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                <span>分阶段目标拆解</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                <span>技能提升路径规划</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                <span>进度跟踪与提醒</span>
+              </li>
+            </ul>
+            <a href="#" class="text-primary font-medium hover:text-primary/80 transition-colors flex items-center">
+              了解更多 <i class="fa fa-arrow-right ml-2"></i>
+            </a>
+          </div>
+          
+          <!-- 功能卡片4 -->
+          <div class="bg-white rounded-xl shadow-lg p-8 card-hover">
+            <div class="w-14 h-14 rounded-lg bg-purple-100 flex items-center justify-center mb-6">
+              <i class="fa fa-users text-purple-600 text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-4">专家一对一指导</h3>
+            <p class="text-gray-600 mb-6">与资深职业规划师进行一对一沟通，获得个性化建议和指导，解决职业发展中的困惑。</p>
+            <ul class="space-y-2 mb-6">
+              <li class="flex items-start">
+                <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                <span>职业定位咨询</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                <span>简历与面试指导</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                <span>职场发展策略制定</span>
+              </li>
+            </ul>
+            <a href="#" class="text-primary font-medium hover:text-primary/80 transition-colors flex items-center">
+              了解更多 <i class="fa fa-arrow-right ml-2"></i>
+            </a>
+          </div>
+          
+          <!-- 功能卡片5 -->
+          <div class="bg-white rounded-xl shadow-lg p-8 card-hover">
+            <div class="w-14 h-14 rounded-lg bg-red-100 flex items-center justify-center mb-6">
+              <i class="fa fa-briefcase text-red-600 text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-4">资源与机会对接</h3>
+            <p class="text-gray-600 mb-6">提供丰富的学习资源和优质的工作机会，帮助你快速成长并实现职业转型。</p>
+            <ul class="space-y-2 mb-6">
+              <li class="flex items-start">
+                <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                <span>精品课程推荐</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                <span>行业人脉拓展</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                <span>优质企业内推</span>
+              </li>
+            </ul>
+            <a href="#" class="text-primary font-medium hover:text-primary/80 transition-colors flex items-center">
+              了解更多 <i class="fa fa-arrow-right ml-2"></i>
+            </a>
+          </div>
+          
+          <!-- 功能卡片6 -->
+          <div class="bg-white rounded-xl shadow-lg p-8 card-hover">
+            <div class="w-14 h-14 rounded-lg bg-teal-100 flex items-center justify-center mb-6">
+              <i class="fa fa-refresh text-teal-600 text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-4">动态调整与复盘</h3>
+            <p class="text-gray-600 mb-6">定期职业复盘和计划调整，确保你的职业规划与个人成长和市场变化保持同步。</p>
+            <ul class="space-y-2 mb-6">
+              <li class="flex items-start">
+                <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                <span>季度职业健康检查</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                <span>计划动态调整机制</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                <span>长期职业发展跟踪</span>
+              </li>
+            </ul>
+            <a href="#" class="text-primary font-medium hover:text-primary/80 transition-colors flex items-center">
+              了解更多 <i class="fa fa-arrow-right ml-2"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 自我评估演示区 -->
+    <section id="assessment" class="py-20 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <div class="flex flex-col lg:flex-row items-center gap-12">
+          <div class="lg:w-1/2">
+            <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-neutral mb-6">专业自我评估</h2>
+            <p class="text-gray-600 mb-8">通过科学的测评体系，深入了解自己的职业兴趣、性格特点和能力优势，为职业规划提供坚实基础。</p>
+            
+            <div class="space-y-6">
+              <div class="bg-white p-6 rounded-xl shadow-md">
+                <div class="flex items-center mb-4">
+                  <div class="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mr-4">
+                    <i class="fa fa-pie-chart text-primary text-xl"></i>
+                  </div>
+                  <h3 class="text-lg font-semibold">职业兴趣测评</h3>
+                </div>
+                <p class="text-gray-600">基于霍兰德职业兴趣理论，评估你对不同职业类型的兴趣倾向，帮助你找到最适合的职业领域。</p>
+              </div>
+              
+              <div class="bg-white p-6 rounded-xl shadow-md">
+                <div class="flex items-center mb-4">
+                  <div class="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center mr-4">
+                    <i class="fa fa-user-o text-secondary text-xl"></i>
+                  </div>
+                  <h3 class="text-lg font-semibold">性格特质分析</h3>
+                </div>
+                <p class="text-gray-600">通过MBTI性格测评，了解你的性格类型和行为偏好，找到与你性格相匹配的职业环境和岗位。</p>
+              </div>
+              
+              <div class="bg-white p-6 rounded-xl shadow-md">
+                <div class="flex items-center mb-4">
+                  <div class="w-12 h-12 rounded-lg bg-orange-100 flex items-center justify-center mr-4">
+                    <i class="fa fa-trophy text-accent text-xl"></i>
+                  </div>
+                  <h3 class="text-lg font-semibold">能力优势评估</h3>
+                </div>
+                <p class="text-gray-600">全面评估你的核心能力和优势领域，明确职业发展的核心竞争力，制定针对性的发展策略。</p>
+              </div>
+            </div>
+            
+            <button class="mt-8 px-8 py-3 bg-primary text-white rounded-lg shadow-md hover:shadow-xl hover:bg-primary/90 transition-all text-lg font-medium" onclick="showPasswordPrompt()">
+              开始免费测评
+            </button>
+          </div>
+          
+          <div class="lg:w-1/2">
+            <div class="bg-white rounded-2xl shadow-xl p-8 relative">
+              <div class="absolute -top-4 -right-4 w-24 h-24 bg-primary/10 rounded-full blur-2xl"></div>
+              <div class="absolute -bottom-6 -left-6 w-32 h-32 bg-secondary/10 rounded-full blur-2xl"></div>
+              
+              <h3 class="text-xl font-semibold mb-6 text-center">测评结果预览</h3>
+              
+              <div class="grid grid-cols-2 gap-6 mb-8">
+                <div class="bg-gray-50 rounded-lg p-4">
+                  <h4 class="text-sm text-gray-500 mb-2">职业兴趣类型</h4>
+                  <div class="flex items-center">
+                    <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                      <i class="fa fa-lightbulb-o text-primary text-xl"></i>
+                    </div>
+                    <div>
+                      <p class="font-medium">研究型</p>
+                      <p class="text-xs text-gray-500">探索、创新、分析</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="bg-gray-50 rounded-lg p-4">
+                  <h4 class="text-sm text-gray-500 mb-2">性格类型</h4>
+                  <div class="flex items-center">
+                    <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mr-3">
+                      <i class="fa fa-users text-secondary text-xl"></i>
+                    </div>
+                    <div>
+                      <p class="font-medium">INFJ</p>
+                      <p class="text-xs text-gray-500">提倡者型人格</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="mb-8">
+                <h4 class="text-sm text-gray-500 mb-3">能力优势雷达图</h4>
+                <div class="h-64">
+                  <canvas id="skillsRadarChart"></canvas>
+                </div>
+              </div>
+              
+              <div>
+                <h4 class="text-sm text-gray-500 mb-3">推荐职业方向</h4>
+                <div class="grid grid-cols-2 gap-3">
+                  <div class="bg-blue-50 text-primary px-3 py-2 rounded-lg text-sm font-medium">产品经理</div>
+                  <div class="bg-green-50 text-secondary px-3 py-2 rounded-lg text-sm font-medium">数据分析师</div>
+                  <div class="bg-purple-50 text-purple-600 px-3 py-2 rounded-lg text-sm font-medium">用户体验设计师</div>
+                  <div class="bg-orange-50 text-accent px-3 py-2 rounded-lg text-sm font-medium">市场研究员</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 规划流程演示区 -->
+    <section id="planning" class="py-20 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+          <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-neutral mb-4">科学规划流程</h2>
+          <p class="text-gray-600 max-w-2xl mx-auto">我们采用六步规划法，从自我认知到目标实现，确保你的职业规划科学可行</p>
+        </div>
+        
+        <div class="relative">
+          <!-- 连接线 -->
+          <div class="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-gray-200 -translate-y-1/2 z-0"></div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-6 gap-8 relative z-10">
+            <!-- 步骤1 -->
+            <div class="bg-white rounded-xl shadow-md p-6 text-center card-hover">
+              <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-primary flex items-center justify-center text-white text-2xl font-bold">1</div>
+              <h3 class="text-lg font-semibold mb-3">自我评估</h3>
+              <p class="text-gray-600 text-sm">通过专业测评工具，全面了解自己的兴趣、性格和能力</p>
+            </div>
+            
+            <!-- 步骤2 -->
+            <div class="bg-white rounded-xl shadow-md p-6 text-center card-hover">
+              <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-primary flex items-center justify-center text-white text-2xl font-bold">2</div>
+              <h3 class="text-lg font-semibold mb-3">环境分析</h3>
+              <p class="text-gray-600 text-sm">研究行业趋势、岗位需求和企业环境，明确外部机会与挑战</p>
+            </div>
+            
+            <!-- 步骤3 -->
+            <div class="bg-white rounded-xl shadow-md p-6 text-center card-hover">
+              <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-primary flex items-center justify-center text-white text-2xl font-bold">3</div>
+              <h3 class="text-lg font-semibold mb-3">目标设定</h3>
+              <p class="text-gray-600 text-sm">制定符合SMART原则的短期、中期和长期职业目标</p>
+            </div>
+            
+            <!-- 步骤4 -->
+            <div class="bg-white rounded-xl shadow-md p-6 text-center card-hover">
+              <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-primary flex items-center justify-center text-white text-2xl font-bold">4</div>
+              <h3 class="text-lg font-semibold mb-3">计划制定</h3>
+              <p class="text-gray-600 text-sm">拆解目标为具体可执行的任务，制定详细的行动计划和时间表</p>
+            </div>
+            
+            <!-- 步骤5 -->
+            <div class="bg-white rounded-xl shadow-md p-6 text-center card-hover">
+              <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-primary flex items-center justify-center text-white text-2xl font-bold">5</div>
+              <h3 class="text-lg font-semibold mb-3">执行与调整</h3>
+              <p class="text-gray-600 text-sm">按计划执行，定期跟踪进度，根据反馈动态调整规划</p>
+            </div>
+            
+            <!-- 步骤6 -->
+            <div class="bg-white rounded-xl shadow-md p-6 text-center card-hover">
+              <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-primary flex items-center justify-center text-white text-2xl font-bold">6</div>
+              <h3 class="text-lg font-semibold mb-3">持续发展</h3>
+              <p class="text-gray-600 text-sm">建立持续学习和职业发展的习惯，适应不断变化的职场环境</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 行动计划演示 -->
+        <div class="mt-20 bg-gray-50 rounded-2xl p-8 shadow-lg">
+          <h3 class="text-xl font-semibold mb-8 text-center">个性化行动计划示例</h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- 短期计划 -->
+            <div class="bg-white rounded-xl p-6 shadow-md">
+              <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mb-4">
+                <i class="fa fa-calendar text-primary text-xl"></i>
+              </div>
+              <h4 class="text-lg font-semibold mb-4 text-primary">短期计划 (1-3个月)</h4>
+              
+              <div class="space-y-4">
+                <div class="flex items-start">
+                  <div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center mt-1 mr-3 flex-shrink-0">
+                    <i class="fa fa-check text-primary text-xs"></i>
+                  </div>
+                  <div>
+                    <h5 class="font-medium">完成数据分析基础课程</h5>
+                    <p class="text-sm text-gray-600">学习Excel高级函数、SQL基础</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center mt-1 mr-3 flex-shrink-0">
+                    <i class="fa fa-check text-primary text-xs"></i>
+                  </div>
+                  <div>
+                    <h5 class="font-medium">建立个人作品集</h5>
+                    <p class="text-sm text-gray-600">完成2个数据分析项目并整理成作品集</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center mt-1 mr-3 flex-shrink-0">
+                    <i class="fa fa-check text-primary text-xs"></i>
+                  </div>
+                  <div>
+                    <h5 class="font-medium">拓展行业人脉</h5>
+                    <p class="text-sm text-gray-600">参加3场行业线上沙龙，联系5位行业内人士</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="mt-6 pt-4 border-t border-gray-100">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm text-gray-500">完成进度</span>
+                  <span class="text-sm font-medium text-primary">60%</span>
+                </div>
+                <div class="w-full h-2 bg-gray-100 rounded-full mt-2">
+                  <div class="h-2 bg-primary rounded-full" style="width: 60%"></div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 中期计划 -->
+            <div class="bg-white rounded-xl p-6 shadow-md">
+              <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mb-4">
+                <i class="fa fa-calendar-check-o text-secondary text-xl"></i>
+              </div>
+              <h4 class="text-lg font-semibold mb-4 text-secondary">中期计划 (3-12个月)</h4>
+              
+              <div class="space-y-4">
+                <div class="flex items-start">
+                  <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center mt-1 mr-3 flex-shrink-0">
+                    <i class="fa fa-check text-secondary text-xs"></i>
+                  </div>
+                  <div>
+                    <h5 class="font-medium">考取专业认证</h5>
+                    <p class="text-sm text-gray-600">完成PMP项目管理认证或数据分析相关证书</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center mt-1 mr-3 flex-shrink-0">
+                    <i class="fa fa-check text-secondary text-xs"></i>
+                  </div>
+                  <div>
+                    <h5 class="font-medium">争取内部转岗</h5>
+                    <p class="text-sm text-gray-600">与上级沟通转岗意向，准备转岗面试</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center mt-1 mr-3 flex-shrink-0">
+                    <i class="fa fa-check text-secondary text-xs"></i>
+                  </div>
+                  <div>
+                    <h5 class="font-medium">提升软技能</h5>
+                    <p class="text-sm text-gray-600">参加沟通技巧和团队管理培训课程</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="mt-6 pt-4 border-t border-gray-100">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm text-gray-500">完成进度</span>
+                  <span class="text-sm font-medium text-secondary">30%</span>
+                </div>
+                <div class="w-full h-2 bg-gray-100 rounded-full mt-2">
+                  <div class="h-2 bg-secondary rounded-full" style="width: 30%"></div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 长期计划 -->
+            <div class="bg-white rounded-xl p-6 shadow-md">
+              <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mb-4">
+                <i class="fa fa-calendar-plus-o text-purple-600 text-xl"></i>
+              </div>
+              <h4 class="text-lg font-semibold mb-4 text-purple-600">长期计划 (1-3年)</h4>
+              
+              <div class="space-y-4">
+                <div class="flex items-start">
+                  <div class="w-6 h-6 rounded-full bg-purple-100 flex items-center justify-center mt-1 mr-3 flex-shrink-0">
+                    <i class="fa fa-check text-purple-600 text-xs"></i>
+                  </div>
+                  <div>
+                    <h5 class="font-medium">晋升为高级数据分析师</h5>
+                    <p class="text-sm text-gray-600">负责重要数据分析项目，带领小型团队</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <div class="w-6 h-6 rounded-full bg-purple-100 flex items-center justify-center mt-1 mr-3 flex-shrink-0">
+                    <i class="fa fa-check text-purple-600 text-xs"></i>
+                  </div>
+                  <div>
+                    <h5 class="font-medium">拓展行业影响力</h5>
+                    <p class="text-sm text-gray-600">在行业论坛发表2篇专业文章，参加行业峰会</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <div class="w-6 h-6 rounded-full bg-purple-100 flex items-center justify-center mt-1 mr-3 flex-shrink-0">
+                    <i class="fa fa-check text-purple-600 text-xs"></i>
+                  </div>
+                  <div>
+                    <h5 class="font-medium">跨领域学习</h5>
+                    <p class="text-sm text-gray-600">学习商业分析和产品管理知识，拓展职业边界</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="mt-6 pt-4 border-t border-gray-100">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm text-gray-500">完成进度</span>
+                  <span class="text-sm font-medium text-purple-600">10%</span>
+                </div>
+                <div class="w-full h-2 bg-gray-100 rounded-full mt-2">
+                  <div class="h-2 bg-purple-600 rounded-full" style="width: 10%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 资源与社区区 -->
+    <section id="resources" class="py-20 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+          <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-neutral mb-4">职业发展资源</h2>
+          <p class="text-gray-600 max-w-2xl mx-auto">丰富的学习资料和活跃的社区，助你持续成长</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- 资源卡片1 -->
+          <div class="bg-white rounded-xl overflow-hidden shadow-md card-hover">
+            <img src="https://picsum.photos/id/20/600/400" alt="职业规划课程" class="w-full h-48 object-cover">
+            <div class="p-6">
+              <div class="flex items-center mb-4">
+                <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                  <i class="fa fa-graduation-cap text-primary"></i>
+                </div>
+                <span class="text-sm font-medium text-primary">课程资源</span>
+              </div>
+              <h3 class="text-xl font-semibold mb-3">职业规划精品课程</h3>
+              <p class="text-gray-600 mb-4">由资深职业规划师和行业专家打造的系统化课程，涵盖职业定位、技能提升、求职面试等内容。</p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <img src="https://picsum.photos/id/1001/100/100" alt="讲师头像" class="w-10 h-10 rounded-full mr-3">
+                  <div>
+                    <p class="font-medium">张教授</p>
+                    <p class="text-xs text-gray-500">人力资源专家 | 15年经验</p>
+                  </div>
+                </div>
+                <button class="px-4 py-2 bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-colors">
+                  查看课程
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 资源卡片2 -->
+          <div class="bg-white rounded-xl overflow-hidden shadow-md card-hover">
+            <img src="https://picsum.photos/id/26/600/400" alt="行业报告" class="w-full h-48 object-cover">
+            <div class="p-6">
+              <div class="flex items-center mb-4">
+                <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mr-3">
+                  <i class="fa fa-file-text-o text-secondary"></i>
+                </div>
+                <span class="text-sm font-medium text-secondary">行业报告</span>
+              </div>
+              <h3 class="text-xl font-semibold mb-3">2025行业发展报告</h3>
+              <p class="text-gray-600 mb-4">定期更新的行业趋势分析报告，包含各行业发展前景、技术变革、人才需求等深度分析。</p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <div class="flex -space-x-2">
+                    <img src="https://picsum.photos/id/1005/100/100" alt="用户头像" class="w-8 h-8 rounded-full border-2 border-white">
+                    <img src="https://picsum.photos/id/1012/100/100" alt="用户头像" class="w-8 h-8 rounded-full border-2 border-white">
+                    <img src="https://picsum.photos/id/1027/100/100" alt="用户头像" class="w-8 h-8 rounded-full border-2 border-white">
+                  </div>
+                  <span class="ml-2 text-sm text-gray-500">1,200+人已下载</span>
+                </div>
+                <button class="px-4 py-2 bg-secondary/10 text-secondary rounded-lg hover:bg-secondary/20 transition-colors">
+                  免费下载
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 资源卡片3 -->
+          <div class="bg-white rounded-xl overflow-hidden shadow-md card-hover">
+            <img src="https://picsum.photos/id/24/600/400" alt="成功案例" class="w-full h-48 object-cover">
+            <div class="p-6">
+              <div class="flex items-center mb-4">
+                <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center mr-3">
+                  <i class="fa fa-users text-purple-600"></i>
+                </div>
+                <span class="text-sm font-medium text-purple-600">成功案例</span>
+              </div>
+              <h3 class="text-xl font-semibold mb-3">职业转型成功故事</h3>
+              <p class="text-gray-600 mb-4">真实的职业转型案例，分享从传统行业转向新兴领域的经验和心路历程，为你的职业决策提供参考。</p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <img src="https://picsum.photos/id/1025/100/100" alt="案例主角" class="w-10 h-10 rounded-full mr-3">
+                  <div>
+                    <p class="font-medium">李女士</p>
+                    <p class="text-xs text-gray-500">从教师到UI设计师 | 10个月转型</p>
+                  </div>
+                </div>
+                <button class="px-4 py-2 bg-purple-100 text-purple-600 rounded-lg hover:bg-purple-200 transition-colors">
+                  阅读故事
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 资源卡片4 -->
+          <div class="bg-white rounded-xl overflow-hidden shadow-md card-hover">
+            <img src="https://picsum.photos/id/42/600/400" alt="在线社区" class="w-full h-48 object-cover">
+            <div class="p-6">
+              <div class="flex items-center mb-4">
+                <div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center mr-3">
+                  <i class="fa fa-comments-o text-accent"></i>
+                </div>
+                <span class="text-sm font-medium text-accent">在线社区</span>
+              </div>
+              <h3 class="text-xl font-semibold mb-3">职业发展交流社区</h3>
+              <p class="text-gray-600 mb-4">与志同道合的伙伴交流职业发展经验，分享资源，解决困惑，拓展人脉。</p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <div class="flex -space-x-2">
+                    <img src="https://picsum.photos/id/1001/100/100" alt="用户头像" class="w-8 h-8 rounded-full border-2 border-white">
+                    <img src="https://picsum.photos/id/1002/100/100" alt="用户头像" class="w-8 h-8 rounded-full border-2 border-white">
+                    <img src="https://picsum.photos/id/1003/100/100" alt="用户头像" class="w-8 h-8 rounded-full border-2 border-white">
+                    <img src="https://picsum.photos/id/1004/100/100" alt="用户头像" class="w-8 h-8 rounded-full border-2 border-white">
+                    <span class="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs font-medium">5k+</span>
+                  </div>
+                </div>
+                <button class="px-4 py-2 bg-accent/10 text-accent rounded-lg hover:bg-accent/20 transition-colors">
+                  加入社区
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 资源卡片5 -->
+          <div class="bg-white rounded-xl overflow-hidden shadow-md card-hover">
+            <img src="https://picsum.photos/id/48/600/400" alt="求职工具" class="w-full h-48 object-cover">
+            <div class="p-6">
+              <div class="flex items-center mb-4">
+                <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center mr-3">
+                  <i class="fa fa-briefcase text-red-600"></i>
+                </div>
+                <span class="text-sm font-medium text-red-600">求职工具</span>
+              </div>
+              <h3 class="text-xl font-semibold mb-3">简历优化与面试准备</h3>
+              <p class="text-gray-600 mb-4">专业简历模板、面试技巧和常见问题解答，助你在求职过程中脱颖而出。</p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <img src="https://picsum.photos/id/1006/100/100" alt="讲师头像" class="w-10 h-10 rounded-full mr-3">
+                  <div>
+                    <p class="font-medium">王老师</p>
+                    <p class="text-xs text-gray-500">资深HR | 面试辅导专家</p>
+                  </div>
+                </div>
+                <button class="px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors">
+                  查看工具
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 资源卡片6 -->
+          <div class="bg-white rounded-xl overflow-hidden shadow-md card-hover">
+            <img src="https://picsum.photos/id/49/600/400" alt="职业导师" class="w-full h-48 object-cover">
+            <div class="p-6">
+              <div class="flex items-center mb-4">
+                <div class="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center mr-3">
+                  <i class="fa fa-handshake-o text-teal-600"></i>
+                </div>
+                <span class="text-sm font-medium text-teal-600">职业导师</span>
+              </div>
+              <h3 class="text-xl font-semibold mb-3">一对一职业辅导</h3>
+              <p class="text-gray-600 mb-4">与行业资深人士和职业规划师进行一对一咨询，获取个性化的职业发展建议。</p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <div class="flex -space-x-2">
+                    <img src="https://picsum.photos/id/1011/100/100" alt="导师头像" class="w-8 h-8 rounded-full border-2 border-white">
+                    <img src="https://picsum.photos/id/1013/100/100" alt="导师头像" class="w-8 h-8 rounded-full border-2 border-white">
+                    <img src="https://picsum.photos/id/1014/100/100" alt="导师头像" class="w-8 h-8 rounded-full border-2 border-white">
+                  </div>
+                  <span class="ml-2 text-sm text-gray-500">120+位专业导师</span>
+                </div>
+                <button class="px-4 py-2 bg-teal-100 text-teal-600 rounded-lg hover:bg-teal-200 transition-colors">
+                  预约咨询
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 用户评价区 -->
+    <section class="py-20 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+          <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-neutral mb-4">用户真实评价</h2>
+          <p class="text-gray-600 max-w-2xl mx-auto">来自各行各业用户的真实反馈，见证职业规划的力量</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- 评价卡片1 -->
+          <div class="bg-gray-50 rounded-xl p-8 shadow-md relative card-hover">
+            <div class="absolute -top-5 -right-5 text-primary text-6xl opacity-20">
+              <i class="fa fa-quote-right"></i>
+            </div>
+            <div class="flex items-center mb-6">
+              <img src="https://picsum.photos/id/1005/100/100" alt="用户头像" class="w-14 h-14 rounded-full mr-4">
+              <div>
+                <h4 class="font-semibold">张明</h4>
+                <p class="text-sm text-gray-500">软件工程师 → 产品经理</p>
+              </div>
+            </div>
+            <p class="text-gray-600 mb-6 relative z-10">通过职业规划平台的测评和指导，我明确了从技术转向产品的发展路径。按照平台提供的学习计划，我在6个月内掌握了产品经理必备技能，并成功跳槽到心仪的互联网公司。</p>
+            <div class="flex">
+              <i class="fa fa-star text-yellow-400"></i>
+              <i class="fa fa-star text-yellow-400"></i>
+              <i class="fa fa-star text-yellow-400"></i>
+              <i class="fa fa-star text-yellow-400"></i>
+              <i class="fa fa-star text-yellow-400"></i>
+            </div>
+          </div>
+          
+          <!-- 评价卡片2 -->
+          <div class="bg-gray-50 rounded-xl p-8 shadow-md relative card-hover">
+            <div class="absolute -top-5 -right-5 text-primary text-6xl opacity-20">
+              <i class="fa fa-quote-right"></i>
+            </div>
+            <div class="flex items-center mb-6">
+              <img src="https://picsum.photos/id/1006/100/100" alt="用户头像" class="w-14 h-14 rounded-full mr-4">
+              <div>
+                <h4 class="font-semibold">李婷</h4>
+                <p class="text-sm text-gray-500">市场营销 → 品牌策略</p>
+              </div>
+            </div>
+            <p class="text-gray-600 mb-6 relative z-10">职业规划师帮我分析了行业趋势和个人优势，发现我更适合品牌策略方向。平台提供的行业报告和学习资源非常实用，让我在新领域迅速上手。现在我已经是一家知名品牌的策略主管。</p>
+            <div class="flex">
+              <i class="fa fa-star text-yellow-400"></i>
+              <i class="fa fa-star text-yellow-400"></i>
+              <i class="fa fa-star text-yellow-400"></i>
+              <i class="fa fa-star text-yellow-400"></i>
+              <i class="fa fa-star-half-o text-yellow-400"></i>
+            </div>
+          </div>
+          
+          <!-- 评价卡片3 -->
+          <div class="bg-gray-50 rounded-xl p-8 shadow-md relative card-hover">
+            <div class="absolute -top-5 -right-5 text-primary text-6xl opacity-20">
+              <i class="fa fa-quote-right"></i>
+            </div>
+            <div class="flex items-center mb-6">
+              <img src="https://picsum.photos/id/1012/100/100" alt="用户头像" class="w-14 h-14 rounded-full mr-4">
+              <div>
+                <h4 class="font-semibold">王强</h4>
+                <p class="text-sm text-gray-500">财务 → 金融科技</p>
+              </div>
+            </div>
+            <p class="text-gray-600 mb-6 relative z-10">作为一名财务从业者，我一直想进入金融科技领域，但不知道如何入手。平台的职业规划让我清晰了解了所需技能和转型路径，特别是专家一对一辅导给了我很多实用建议，现在我已经在一家金融科技公司工作一年了。</p>
+            <div class="flex">
+              <i class="fa fa-star text-yellow-400"></i>
+              <i class="fa fa-star text-yellow-400"></i>
+              <i class="fa fa-star text-yellow-400"></i>
+              <i class="fa fa-star text-yellow-400"></i>
+              <i class="fa fa-star text-yellow-400"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 价格方案区 -->
+    <section id="pricing" class="py-20 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+          <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-neutral mb-4">选择适合你的方案</h2>
+          <p class="text-gray-600 max-w-2xl mx-auto">无论你是刚开始探索职业方向，还是想实现职业转型，我们都有适合你的解决方案</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- 免费方案 -->
+          <div class="bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
+            <div class="p-8">
+              <h3 class="text-xl font-semibold mb-2">免费版</h3>
+              <p class="text-gray-600 mb-6">适合初步探索职业方向的用户</p>
+              <div class="mb-6">
+                <span class="text-4xl font-bold">¥0</span>
+                <span class="text-gray-500">/永久</span>
+              </div>
+              <ul class="space-y-3 mb-8">
+                <li class="flex items-start">
+                  <i class="fa fa-check text-secondary mt-1 mr-3"></i>
+                  <span>基础职业兴趣测评</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fa fa-check text-secondary mt-1 mr-3"></i>
+                  <span>3个推荐职业方向</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fa fa-check text-secondary mt-1 mr-3"></i>
+                  <span>基础职业规划指南</span>
+                </li>
+                <li class="flex items-start text-gray-400">
+                  <i class="fa fa-times mt-1 mr-3"></i>
+                  <span>详细行业分析报告</span>
+                </li>
+                <li class="flex items-start text-gray-400">
+                  <i class="fa fa-times mt-1 mr-3"></i>
+                  <span>个性化行动计划</span>
+                </li>
+                <li class="flex items-start text-gray-400">
+                  <i class="fa fa-times mt-1 mr-3"></i>
+                  <span>专家一对一咨询</span>
+                </li>
+              </ul>
+              <button class="w-full py-3 bg-gray-100 text-gray-800 rounded-lg font-medium hover:bg-gray-200 transition-colors" onclick="showPasswordPrompt()">
+                开始免费测评
+              </button>
+            </div>
+          </div>
+          
+          <!-- 专业版 -->
+          <div class="bg-white rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-1 relative">
+            <div class="absolute top-0 right-0 bg-primary text-white px-4 py-1 text-sm font-medium">
+              最受欢迎
+            </div>
+            <div class="p-8">
+              <h3 class="text-xl font-semibold mb-2">专业版</h3>
+              <p class="text-gray-600 mb-6">适合明确职业目标，需要系统规划的用户</p>
+              <div class="mb-6">
+                <span class="text-4xl font-bold">¥299</span>
+                <span class="text-gray-500">/年</span>
+              </div>
+              <ul class="space-y-3 mb-8">
+                <li class="flex items-start">
+                  <i class="fa fa-check text-secondary mt-1 mr-3"></i>
+                  <span>全面职业测评（兴趣+性格+能力）</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fa fa-check text-secondary mt-1 mr-3"></i>
+                  <span>10个推荐职业方向</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fa fa-check text-secondary mt-1 mr-3"></i>
+                  <span>详细行业与岗位分析报告</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fa fa-check text-secondary mt-1 mr-3"></i>
+                  <span>3年个性化职业发展计划</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fa fa-check text-secondary mt-1 mr-3"></i>
+                  <span>季度职业健康检查</span>
+                </li>
+                <li class="flex items-start text-gray-400">
+                  <i class="fa fa-times mt-1 mr-3"></i>
+                  <span>专家一对一咨询</span>
+                </li>
+              </ul>
+              <!-- 修改后的内容，按钮放在容器下方中间位置 -->
+              <div class="mt-8 text-center">
+                <a href="#小程序://商品图册/W54ETdccQPe9ulm" class="inline-block w-full py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors max-w-fit mx-auto">
+                  选择专业版
+                </a>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 企业版 -->
+          <div class="bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
+            <div class="p-8">
+              <h3 class="text-xl font-semibold mb-2">企业版</h3>
+              <p class="text-gray-600 mb-6">适合企业人才发展与员工职业规划</p>
+              <div class="mb-6">
+                <span class="text-4xl font-bold">¥999</span>
+                <span class="text-gray-500">/企业账户/年</span>
+              </div>
+              <ul class="space-y-3 mb-8">
+                <li class="flex items-start">
+                  <i class="fa fa-check text-secondary mt-1 mr-3"></i>
+                  <span>50个专业版账号</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fa fa-check text-secondary mt-1 mr-3"></i>
+                  <span>企业人才发展报告</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fa fa-check text-secondary mt-1 mr-3"></i>
+                  <span>定制化岗位能力模型</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fa fa-check text-secondary mt-1 mr-3"></i>
+                  <span>团队职业发展规划</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fa fa-check text-secondary mt-1 mr-3"></i>
+                  <span>每季度专家培训</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fa fa-check text-secondary mt-1 mr-3"></i>
+                  <span>专家一对一咨询（50次/年）</span>
+                </li>
+              </ul>
+              <button class="w-full py-3 bg-gray-800 text-white rounded-lg font-medium hover:bg-gray-700 transition-colors">
+                联系销售
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-12 text-center">
+          <p class="text-gray-600 mb-6">需要更个性化的解决方案？</p>
+          <button class="px-8 py-3 bg-white border border-primary text-primary rounded-lg shadow-md hover:shadow-lg hover:bg-primary/5 transition-all text-lg font-medium">
+            预约专家咨询
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 行动召唤区 -->
+    <section class="py-20 bg-gradient-to-br from-primary to-indigo-600 text-white">
+      <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto text-center">
+          <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold mb-6">开始你的职业规划之旅</h2>
+          <p class="text-white/80 text-lg mb-10">不要让职业发展停留在迷茫中，立即行动，掌握自己的职业未来</p>
+          <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+            <button class="px-8 py-3 bg-white text-primary rounded-lg shadow-lg hover:shadow-xl hover:bg-gray-100 transition-all text-lg font-medium" onclick="showPasswordPrompt()">
+              免费注册账号
+            </button>
+            <button class="px-8 py-3 bg-transparent border border-white text-white rounded-lg shadow-md hover:shadow-lg hover:bg-white/10 transition-all text-lg font-medium">
+              预约演示
+            </button>
+          </div>
+          <div class="mt-10 flex justify-center space-x-8">
+            <div class="text-center">
+              <div class="text-4xl font-bold mb-2">10,000+</div>
+              <p class="text-white/70">用户已成功规划职业</p>
+            </div>
+            <div class="text-center">
+              <div class="text-4xl font-bold mb-2">98%</div>
+              <p class="text-white/70">用户满意度</p>
+            </div>
+            <div class="text-center">
+              <div class="text-4xl font-bold mb-2">500+</div>
+              <p class="text-white/70">合作企业</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="bg-gray-900 text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <a href="#" class="flex items-center space-x-2 mb-6">
+            <div class="w-10 h-10 rounded-lg bg-gradient-blue flex items-center justify-center">
+              <i class="fa fa-compass text-white text-xl"></i>
+            </div>
+            <span class="text-xl font-bold">新峰职业规划</span>
+          </a>
+          <p class="text-gray-400 mb-6">专业的职业规划平台，助你找到理想职业方向，实现人生事业再上新的高峰。</p>
+          <div class="flex space-x-4">
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary transition-colors">
+              <i class="fa fa-weixin"></i>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary transition-colors">
+              <i class="fa fa-weibo"></i>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary transition-colors">
+              <i class="fa fa-linkedin"></i>
+            </a>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold mb-6">产品</h4>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">职业测评</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">行业分析</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">职业规划</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">学习资源</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">专家咨询</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold mb-6">关于我们</h4>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">公司简介</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">团队介绍</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">合作伙伴</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">加入我们</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">联系我们</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold mb-6">支持</h4>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">帮助中心</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">常见问题</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">使用教程</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">隐私政策</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">服务条款</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-500 text-sm mb-4 md:mb-0">© 2025 富贵人生俱乐部 保留所有权利</p>
+        <div class="flex space-x-6">
+          <a href="#" class="text-gray-500 hover:text-white text-sm transition-colors">隐私政策</a>
+          <a href="#" class="text-gray-500 hover:text-white text-sm transition-colors">服务条款</a>
+          <a href="#" class="text-gray-500 hover:text-white text-sm transition-colors">Cookie 政策</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // 密码提示框功能
+    function showPasswordPrompt() {
+      // 创建一个自定义对话框
+      const modal = document.createElement('div');
+      modal.style.position = 'fixed';
+      modal.style.top = '0';
+      modal.style.left = '0';
+      modal.style.width = '100%';
+      modal.style.height = '100%';
+      modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+      modal.style.display = 'flex';
+      modal.style.alignItems = 'center';
+      modal.style.justifyContent = 'center';
+      modal.style.zIndex = '1000';
+
+      const dialog = document.createElement('div');
+      dialog.style.backgroundColor = 'white';
+      dialog.style.padding = '30px';
+      dialog.style.borderRadius = '10px';
+      dialog.style.maxWidth = '500px';
+      dialog.style.width = '90%';
+      dialog.style.textAlign = 'center';
+
+      const title = document.createElement('h3');
+      title.textContent = '请输入密码';
+      title.style.marginBottom = '20px';
+      title.style.fontSize = '20px';
+
+      const message = document.createElement('p');
+      message.textContent = '通过填写免费测评信息登记表即可获取密码。';
+      message.style.marginBottom = '20px';
+
+      const registerButton = document.createElement('button');
+      registerButton.textContent = '免费测评信息登记表';
+      registerButton.style.backgroundColor = '#165DFF';
+      registerButton.style.color = 'white';
+      registerButton.style.border = 'none';
+      registerButton.style.padding = '10px 20px';
+      registerButton.style.borderRadius = '5px';
+      registerButton.style.marginBottom = '20px';
+      registerButton.style.cursor = 'pointer';
+      registerButton.addEventListener('click', function() {
+        window.open('https://doc.weixin.qq.com/forms/ANgASAfkAEwASsATgbSAMcCNiQYbJI1Tf?page=1', '_blank');
+      });
+
+      const passwordInput = document.createElement('input');
+      passwordInput.type = 'password';
+      passwordInput.placeholder = '请输入密码';
+      passwordInput.style.width = '100%';
+      passwordInput.style.padding = '10px';
+      passwordInput.style.marginBottom = '20px';
+      passwordInput.style.border = '1px solid #ddd';
+      passwordInput.style.borderRadius = '5px';
+
+      const submitButton = document.createElement('button');
+      submitButton.textContent = '提交';
+      submitButton.style.backgroundColor = '#165DFF';
+      submitButton.style.color = 'white';
+      submitButton.style.border = 'none';
+      submitButton.style.padding = '10px 20px';
+      submitButton.style.borderRadius = '5px';
+      submitButton.style.cursor = 'pointer';
+      submitButton.addEventListener('click', function() {
+        if (passwordInput.value === 'lianheziqiang') {
+          alert('密码正确！这是您的测评结果');
+          modal.remove();
+        } else {
+          alert('您的密码不正确，请重新输入。');
+        }
+      });
+
+      const closeButton = document.createElement('button');
+      closeButton.textContent = '取消';
+      closeButton.style.backgroundColor = '#f1f1f1';
+      closeButton.style.border = 'none';
+      closeButton.style.padding = '10px 20px';
+      closeButton.style.borderRadius = '5px';
+      closeButton.style.marginLeft = '10px';
+      closeButton.style.cursor = 'pointer';
+      closeButton.addEventListener('click', function() {
+        modal.remove();
+      });
+
+      const buttonContainer = document.createElement('div');
+      buttonContainer.style.display = 'flex';
+      buttonContainer.style.justifyContent = 'center';
+      buttonContainer.style.gap = '10px';
+
+      buttonContainer.appendChild(submitButton);
+      buttonContainer.appendChild(closeButton);
+
+      dialog.appendChild(title);
+      dialog.appendChild(message);
+      dialog.appendChild(registerButton);
+      dialog.appendChild(passwordInput);
+      dialog.appendChild(buttonContainer);
+
+      modal.appendChild(dialog);
+      document.body.appendChild(modal);
+    }
+    
+    // 导航栏滚动效果
+    window.addEventListener('scroll', function() {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('shadow-md');
+        navbar.classList.remove('bg-white/90');
+        navbar.classList.add('bg-white');
+      } else {
+        navbar.classList.remove('shadow-md');
+        navbar.classList.add('bg-white/90');
+        navbar.classList.remove('bg-white');
+      }
+    });
+    
+    // 移动端菜单切换
+    document.getElementById('menu-toggle').addEventListener('click', function() {
+      const mobileMenu = document.getElementById('mobile-menu');
+      mobileMenu.classList.toggle('hidden');
+    });
+    
+    // 平滑滚动
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+          
+          // 关闭移动菜单
+          document.getElementById('mobile-menu').classList.add('hidden');
+        }
+      });
+    });
+    
+    // 初始化技能雷达图
+    window.addEventListener('load', function() {
+      const ctx = document.getElementById('skillsRadarChart').getContext('2d');
+      const skillsRadarChart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: ['分析思维', '沟通能力', '创造力', '领导力', '技术能力', '团队协作'],
+          datasets: [{
+            label: '当前能力',
+            data: [80, 70, 65, 50, 90, 85],
+            backgroundColor: 'rgba(22, 93, 255, 0.2)',
+            borderColor: 'rgba(22, 93, 255, 1)',
+            pointBackgroundColor: 'rgba(22, 93, 255, 1)',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: 'rgba(22, 93, 255, 1)'
+          }, {
+            label: '目标岗位要求',
+            data: [75, 85, 70, 65, 80, 85],
+            backgroundColor: 'rgba(54, 211, 153, 0.2)',
+            borderColor: 'rgba(54, 211, 153, 1)',
+            pointBackgroundColor: 'rgba(54, 211, 153, 1)',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: 'rgba(54, 211, 153, 1)'
+          }]
+        },
+        options: {
+          scales: {
+            r: {
+              angleLines: {
+                display: true
+              },
+              suggestedMin: 0,
+              suggestedMax: 100
+            }
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
